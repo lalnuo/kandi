@@ -1,0 +1,8 @@
+suojautumistapoja:
+- testaus
+
+riskin minimointi:
+- minimioikeudet
+- salasanojen tiivisteiden laskeminen
+
+sqlmap - penetration testing
