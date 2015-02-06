@@ -32,7 +32,25 @@
 \usepackage{amsfonts,amsmath,amssymb,amsthm,booktabs,color,enumitem,graphicx}
 \usepackage[pdftex,hidelinks]{hyperref}
 \usepackage{listings}
+\usepackage{xcolor}
+
 \lstset{
+	   keywordstyle=\color{black}\bfseries, % style for keywords
+	   numbers=none, % where to put the line-numbers
+	   numberstyle=\tiny, % the size of the fonts that are used for the line-numbers     
+	   showspaces=false, % shcow spaces adding particular underscores
+	   showstringspaces=false, % underline spaces within strings
+	   showtabs=false, % show tabs within strings adding particular underscores
+	   frame=single, % adds a frame around the code
+	   framesep=5pt,
+	   aboveskip=15pt,
+	   belowskip=15pt,
+	   tabsize=2, % sets default tabsize to 2 spaces
+	   rulesepcolor=\color{gray},
+	   rulecolor=\color{black},
+	   captionpos=b, % sets the caption-position to bottom
+	   breaklines=true, % sets automatic line breaking
+	   breakatwhitespace=false,
 	literate={ö}{{\"o}}1
 	{ä}{{\"a}}1
 	{ü}{{\"u}}1
@@ -130,32 +148,50 @@
 \section{Johdanto}
 SQL-Injektio on verkkosovellusten tämän hetken suurin tietoturvariski [ref]. Kandidaatintutkielmani pääteema on SQL-injektiolta suojautuminen. Ennen SQL-injektiolta suojautumista käsittelevää osuutta esittelen mikä on SQL-injektio. 
 
+- missä sql käytetään (yleisimmät sovellukset tms.)
 [Jotain liibalaabaa sql injektoista nykymaailmassa]
-
+\section{Käsitteitä}
+-SQL
+out of band
+inband
 \pagebreak
 % Write some science here.
 
+
+
 \section{SQL-Injektio}
-\subsection{Mikä on SQL-Injektio}
-SQL-Injektiossa hyökkääjä pääsee suorittamaan haitallisen SQL-kyselyn sovelluksen tietokantaan. Kyselyn tuloksena hyökkääjä voi suorittaa kaikkia tietokantaoperaatioita, joihin sovelluksella on oikeudet. Mikäli sovelluksen tietokantaoikeuksia ei ole rajoitettuu millään tavoin, hyökkääjä voi esimerkiksi lukea, kirjoittaa, muuttaa ja poistaa tietoja tietokannasta. Osalla kyselyistä voidaan myös päästä käsiksi tietokantapalvelimen käyttöjärjestelmään ja siten suorittaa muunlaisia hyökkäyksiä. 
+Tavallisesti relaatiotietokantoja käyttävissä sovelluksissa tietokanta on oma erillinen palvelimensa. Sovelluksella on tietokantaan omat tunnuksensa. Sovelluksen tietokantatunnuksien oikeuksia voidaan rajata halutulla tavalla. Esimerkiksi sovelluksen tietokantatunnuksilla on harvoin tarpeellista pystyä poistamaan tietokantatauluja. Sovellus kommunikoi tietokantapalvelimen kanssa käyttäen SQL kyselykieltä.
 
-SQL-Injektio on mahdollinen vain silloin, kun hyökkääjä pääsee käsiksi kyselyn sisältöön. Kyselyn sisältöön vaikuttaminen tulee tarpeeseen esimerkiksi rekisteröitymisissä, viestin lähettämisessä ja hauissa. Esimerkiksi kirjautuminen järjestelmään saatetaan hoitaa seuraavalla tavalla:
+SQL-Injektiossa hyökkääjä pääsee suorittamaan sovelluksen tietokannassa itse kirjoittamiaan käskyjä. Mikäli sovelluksen tietokantakäyttäjän oikeuksia ei ole rajattu, hyökkääjä voi onnistuneen sql-injektion seurauksena suorittaa mitä tahansa tietokantapalvelimen tukemia SQL-kyselyitä. Tällöin hyökkääjän on mahdollista esimerkiksi lukea, muuttaa, lisätä tai poistaa mitä tahansa tietokannan tietoja. Jotkut tietokantapalvelimet myös sallivat käyttöjärjestelmätason komentojen suorittamisen. Tällöin hyökkääjän on mahdollista suorittaa myös muunlaisia hyökkäyksiä. 
 
+SQL-Injektio on mahdollinen vain silloin kun käyttäjältä tulevaa tietoa käytetään osana tietokantapalvelimelle tehtävää kyselyä. Tämä on kuitenkin varsin tavallinen tarve sovelluksissa. Tietokannassa voidaan säilyttää esimerkiksi käyttäjätunnuksia ja salasanoja. Näin ollen kirjautuessa järjestelmään käyttäjän antamaa syötettä käytetään osana SQL-kyselyä.
 
-\begin{lstlisting}[language=sql]
-SELECT count(*) FROM users
-WHERE username=käyttäjänimi
-AND password = salasana
+\subsection{SQL-Injektio käytännössä}
+
+Esimerkiksi tuotteiden etsimiseen liittyvä sql-käsky voidaan rakentaa sovelluksessa seuraavalla tavalla:
+
+\begin{lstlisting}
+sql = "SELECT * FROM tuotteet
+WHERE nimi ='" + params[:tuotenimi]
 \end{lstlisting}
 
-Kyseisessä koodiesimerkissä hakuun käytetään käyttäjän antamia parametreja ovat "käyttäjänimi" ja "salasana". Hyökkääjä voisi asettaa niistä kumpaan tahansa haitallisen SQL-lauseen.
+Mikäli käyttäjä antaa nimekseen "'; DROP TABLE tuottet;'. Valmis kysely tietokannalle näyttää seuraavalta:
 
+\begin{lstlisting}[language=sql]
+sql = "SELECT * FROM tuotteet
+WHERE nimi =''; DROP TABLE tuotteet                             
+\end{lstlisting}
+
+Kyseinen kysely ensin etsii kaikki tuotteet joiden nimi on tyhjä. Seuraavaksi suoritetaan komento DROP TABLE tuotteet, joka poistaa koko tuotteet taulun, mikäli sovelluksen tietokantatunnuksilla on siihen oikeudet. 
+
+"DROP TABLE tuotteet" tilalla olisi voinut olla mikä tahansa muukin SQL käsky. Esimerkiksi kaikkien tuotteiden listaamiseen hyökkääjä olisi voinut käyttää tuotenimeä joka sisältää jonkin tautologian esimerkiksi "'; OR 1=!".
+
+\subsection{SQL-Injektion alatyypit}
 Artikkelin "SQL-Injection is still alive"  mukaan SQL-injektioita on kolmea eri päätyyppiä päätyyppiä.
 
 \begin{description}
 \item[Inband injektio] \hfill \\
-Kun SQL-injektion tuloste saadaan samaa reittiä kun se on syötetty, on kyseessä inband injektio.
-Esimerkiksi jos sovelluksessa on mahdollista hakea tietoa jollain hakusanalla ja saada tuloksena kaikki haun tiedot. 
+Kun SQL-injektion tuloste saadaan samaa reittiä kun se on syötetty, on kyseessä inband injektio. Esimerkiksi jos sovelluksessa on mahdollista hakea lista tuotteista jotka ovat maasta jonka käyttäjä antaa kyselyssä.
 
 \item[Out-of-band injektio] \hfill \\
 Kun SQL-Injektion tuloste saadaan eri reittiä kun se on syötetty, on kyseesä out-of-band injektio. Web-sovellus saattaa esimerkiksi tallettaa tietokantaansa millä selaimilla sitä on käytetty. Selaintiedot haetaan HTTP pyynnön "User-Agent" kentästä. Hyökkääjä voi asettaa SQL-injektion User-Agent kenttäänsä. Todennäköisesti hyökkääjä ei näe kyselyn tulosta kyselyn palauttamalla sivulla. Hyökkääjän voi ohjata tulokset itselleen esimerkiksi suorituttamalla injektiossa haun:
@@ -169,26 +205,25 @@ utl_http('http://www.hyokkaajansivu.fi/injections/' ||
 \end{lstlisting}
 Injektion onnistuessa hyökkääjän palvelimen logeissa näkyy esimerkiksi:
 
-\textbf{GET "/injections/admininpassword", 200}
+\begin{lstlisting}
+GET "/injections/admininpassword", 200
+\end{lstlisting}
 
 Tällöin hyökkääjä saa selville käyttäjän admin salasanan.
 
 \item[Sokea injektio] \hfill \\
 Sokea injektio:
-Hyökkääjä ei saa minkäänlaista palautetta sovellukselta. Hyökkääjä voi kuitenkin kokeilla muokata sovelluksen tietoja ja verrata vaikutuksia sovelluksessa.
+Hyökkääjä ei saa minkäänlaista palautetta sovellukselta. Hyökkääjä voi kuitenkin kokeilla muokata sovelluksen tietoja ja tarkastella vaikuttaako se sovellukseen. Hyökkääjä voi käyttää apunaan sitä kuinka nopeasti sivu latautuu. Lisäämällä injektoituun sql-käskyyn komennon "waitfor delay 0:0:5", tietokanta odottaa 5 sekuntia ennen kuin se palauttaa tuloksen. Tästä voidaan päätellä injektion onnistuneen.
 
 
 \end{description}
 
-
-\subsection{SQL-Injektion toteutus käytännössä}
 \pagebreak
 
 
 \section {SQL-Injektiolta suojautuminen}
 \subsection {Jokin suojautumistapa}
-\subsection {Jokin suojautumistapa}
-\subsection {Jokin suojautumistapa}
+\section {Riskin minimointi}
 \section {Yhteenveto}
 
 
