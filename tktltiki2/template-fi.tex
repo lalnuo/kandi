@@ -146,12 +146,15 @@
 \mainmatter       % clear page, start arabic page numbering
 
 \section{Johdanto}
-SQL-Injektio on verkkosovellusten tämän hetken suurin tietoturvariski [ref]. Kandidaatintutkielmani pääteema on SQL-injektiolta suojautuminen. Ennen SQL-injektiolta suojautumista käsittelevää osuutta esittelen mikä on SQL-injektio. 
+Tämä kandidaatintutkielma esittelee mikä on SQL-injektio ja kuinka siltä suojaudutaan. Ensimmäisissä luvuissa esitellään mikä on SQL-injektio. SQL-Injektio esitellään ensin pääpiirteissään. Sen jälkeen esitellään miten se voidaan toteuttaa käytännössä, sekä millaisiin eri alatyyppeihin SQL-injektiot jaotellaan. Kun SQL-Injektion käsite ja lähestymistavat on esitelty, esitellään käytänteet joilla SQL-injektioita pyritään estämään.
 
-- missä sql käytetään (yleisimmät sovellukset tms.)
-[Jotain liibalaabaa sql injektoista nykymaailmassa]
+Aihe on tärkeä koska verkossa käsitellään jatkuvasti entistä enemmän arkaluontoisia tietoja. Verkossa hoidetaan asioita kuten laskujen maksaminen, hotellien varaus ja henkilökohtaisten viestien vaihtaminen. Yleensä tiedot tallennetaan relaatiotietokantoihin. Juuri tällaiset sovellukset voivat olla haavoittuvaisia SQL-Injektioille, ellei asiaa ole otettu huomioon. Lienee siis itsestäänselvää, että jokaisen tietokantasovelluksia ohjelmoivan on ymmärettävä mikä on SQL-injektio ja kuinka suojautua siltä.
+
+SQL-Injektio on yleisin tietoturva-aukko web-sovelluksissa \cite{detection}. Yleisyytensä lisäksi SQL-injektio on myös hyvin vaarallinen. Onnistuneen SQL-injektion avulla hyökkääjä voi tehdä tietokannalle mitä tahansa operaatioita. SQL-Injektiolla on vuosien aikana tehty lukuisia murtoja. Yksi suurimmista murroista tehtiin SQL-Injektiolla Guess.com:ille. Hyökkääjä sai käsinsä 200 000 ihmisen nimet ja luottokorttitiedot. Sen lisäksi että SQL-injektio on yleisin tietoturva-aukko, se on myös helppoa toteuttaa ilman suurempaa ymmärrystä sen toiminnasta. SQL-Injektioiden tekemiseen löytyy valmiita työkaluja, jotka ilmoittavat sivuston heikkouksista lähes tulkoon napin painalluksella. Tästä esimerkkinä "sqlmap" työkalu joka on tehty tunkeutumistestaamista varten \textit{(engl. penetration testing)}
+
 \section{Käsitteitä}
 -SQL
+- SQL Injection
 out of band
 inband
 \pagebreak
@@ -160,7 +163,7 @@ inband
 
 
 \section{SQL-Injektio}
-Tavallisesti relaatiotietokantoja käyttävissä sovelluksissa tietokanta on oma erillinen palvelimensa. Sovelluksella on tietokantaan omat tunnuksensa. Sovelluksen tietokantatunnuksien oikeuksia voidaan rajata halutulla tavalla. Esimerkiksi sovelluksen tietokantatunnuksilla on harvoin tarpeellista pystyä poistamaan tietokantatauluja. Sovellus kommunikoi tietokantapalvelimen kanssa käyttäen SQL kyselykieltä.
+Tavallisesti relaatiotietokantoja käyttävissä sovelluksissa tietokanta on oma erillinen palvelimensa. Sovelluksella on tietokantaan omat tunnuksensa. Sovelluksen tietokantatunnuksien oikeuksia voidaan rajata halutulla tavalla. Esimerkiksi sovelluksen tietokantatunnuksilla on harvoin tarpeellista pystyä poistamaan tietokantatauluja. Sovellus kommunikoi tietokantapalvelimen kanssa käyttäen SQL (\textit{Structured Query Language}) kyselykieltä.
 
 SQL-Injektiossa hyökkääjä pääsee suorittamaan sovelluksen tietokannassa itse kirjoittamiaan käskyjä. Mikäli sovelluksen tietokantakäyttäjän oikeuksia ei ole rajattu, hyökkääjä voi onnistuneen sql-injektion seurauksena suorittaa mitä tahansa tietokantapalvelimen tukemia SQL-kyselyitä. Tällöin hyökkääjän on mahdollista esimerkiksi lukea, muuttaa, lisätä tai poistaa mitä tahansa tietokannan tietoja. Jotkut tietokantapalvelimet myös sallivat käyttöjärjestelmätason komentojen suorittamisen. Tällöin hyökkääjän on mahdollista suorittaa myös muunlaisia hyökkäyksiä. 
 
@@ -182,12 +185,12 @@ sql = "SELECT * FROM tuotteet
 WHERE nimi =''; DROP TABLE tuotteet                             
 \end{lstlisting}
 
-Kyseinen kysely ensin etsii kaikki tuotteet joiden nimi on tyhjä. Seuraavaksi suoritetaan komento DROP TABLE tuotteet, joka poistaa koko tuotteet taulun, mikäli sovelluksen tietokantatunnuksilla on siihen oikeudet. 
+Kyseinen kysely ensin etsii kaikki tuotteet joiden nimi on tyhjä. Seuraavaksi suoritetaan komento "DROP TABLE tuotteet", joka poistaa koko tuotteet taulun, mikäli sovelluksen tietokantatunnuksilla on siihen oikeudet. 
 
 "DROP TABLE tuotteet" tilalla olisi voinut olla mikä tahansa muukin SQL käsky. Esimerkiksi kaikkien tuotteiden listaamiseen hyökkääjä olisi voinut käyttää tuotenimeä joka sisältää jonkin tautologian esimerkiksi "'; OR 1=!".
 
 \subsection{SQL-Injektion alatyypit}
-Artikkelin "SQL-Injection is still alive"  mukaan SQL-injektioita on kolmea eri päätyyppiä päätyyppiä.
+Artikkelin "SQL-Injection is still alive"  mukaan SQL-injektioita on kolmea eri päätyyppiä\cite{still-alive}.
 
 \begin{description}
 \item[Inband injektio] \hfill \\
@@ -213,7 +216,7 @@ Tällöin hyökkääjä saa selville käyttäjän admin salasanan.
 
 \item[Sokea injektio] \hfill \\
 Sokea injektio:
-Hyökkääjä ei saa minkäänlaista palautetta sovellukselta. Hyökkääjä voi kuitenkin kokeilla muokata sovelluksen tietoja ja tarkastella vaikuttaako se sovellukseen. Hyökkääjä voi käyttää apunaan sitä kuinka nopeasti sivu latautuu. Lisäämällä injektoituun sql-käskyyn komennon "waitfor delay 0:0:5", tietokanta odottaa 5 sekuntia ennen kuin se palauttaa tuloksen. Tästä voidaan päätellä injektion onnistuneen.
+Hyökkääjä ei saa minkäänlaista palautetta sovellukselta. Hyökkääjä voi kuitenkin kokeilla muokata sovelluksen tietoja ja tarkastella vaikuttaako se sovellukseen. Hyökkääjä voi käyttää apunaan sitä kuinka nopeasti sivu latautuu. Lisäämällä injektoituun sql-käskyyn komennon "waitfor delay 0:0:5", tietokanta odottaa 5 sekuntia ennen kuin se palauttaa tuloksen. Tästä voidaan päätellä injektion onnistuneen. \cite{regexp}
 
 
 \end{description}
@@ -222,6 +225,28 @@ Hyökkääjä ei saa minkäänlaista palautetta sovellukselta. Hyökkääjä voi
 
 
 \section {SQL-Injektiolta suojautuminen}
+SQL-Injektiolta suojautumiseen on kehitetty useita keinoja. Keinot voidaan jakaa kolmeen päätyyppiin: Hyvät ohjelmointikäytänteet, SQL-injektion havaitseminen ja SQL-injektion ajonaikainen ehkäisy\cite{detection}.
+
+\subsection{Hyvät ohjelmointikäntänteet}
+\begin{description}
+\item[Parametrisoidut kyselyt ] \hfill \\
+Parametrisoiduissa kyselyssä luodaan SQL-kyselystä pohja, johon lisätään paikanpitäjät \textit{(engl. placeholder)}. Paikanpitäjät korvataan myöhemmin varsinaisilla arvoilla. Parametrisoitu kysely annetaan tietokannalle. Tietokanta kääntää ja optimoi kyselyn pohjan vain kerran. Tietokanta ei kuitenkaan vielä suorita varsinaista kyselyä, koska varsinaiset arvot puuttuvat. Tällainen toimintatapa parantaa tietoturvan lisäksi myös suorituskykyä.
+
+Parametrisoitujen kyselyiden avulla erotetaan kysely ja siihen liittyvä data. Kun kysely on valmiiksi käännettynä, varsinaisia arvoja ei enää käännetä SQL:läksi. Tästä syystä on mahdotonta, että hyökkääjä voisi suorittaa omia SQL-käskyään syötteensä avulla. Jos hyökkääjä esimerkiksi asettaa käyttäjänimekseen "'OR 1=1'", tietokannasta haetaan käyttäjää jonka käyttäjänimi on "'OR1=1".
+
+Parametrisoidut kyselyt ovat tuettuina lähes kaikissa yleisimmissä ohjelmointikielissä.
+
+\item[Korvaaminen] \hfill \\
+Korvaaminen \textit{engl. escaping} on toimenpide jossa käyttäjän syötteestä parsitaan vaaralliset merkit pois. Esimerkiksi ' merkit voidaan muuttaa \textbackslash merkeiksi. Syötteen korvaamisissa on kuitenkin tietokantakohtaisia eroja. Siksi kullekkin tietokannalle on olemassa omat korvaamisfunktionsa. Esimerkiksi PHP:ssa käytetään mySQL:lää varten "my{\_}sql{\_}real{\_}ecape()" funktiota.
+
+\item[Datan validointi]\hfill \\
+Datan validointi ei takaa suojaa SQL-injektiolta, mutta se tekee hyökkäyksestä vaikeampaa. Esimerkiksi jos kyseessä on puhelinnumerokenttä, voidaan tarkistaa että syötteessä on vain numeroita. Käytössä voi olla myös luotettujen lista \textit{(engl. whitelist)}, jonne on listattu kaikki syötteelle sallitut arvot.
+
+\end{description}
+\pagebreak
+\subsection{SQL-Injektion havaitseminen}
+
+\subsection{SQL-Injektion ajoaikainen ehkäisy}
 \subsection {Jokin suojautumistapa}
 \section {Riskin minimointi}
 \section {Yhteenveto}
