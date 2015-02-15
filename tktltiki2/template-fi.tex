@@ -244,8 +244,23 @@ Datan validointi ei takaa suojaa SQL-injektiolta, mutta se tekee hyökkäyksest�
 
 \end{description}
 \pagebreak
-\subsection{SQL-Injektion havaitseminen}
+\subsection{Penetraatiotestaus}
 
+
+Ei voida luottaa että edellä esiteltyjä meneltemiä muistettaisiin aina käyttää. Tämän takia sovellusta on tietoturvatestattava. Yang Haixia edottaa tutkielmassaan \cite{testing} seuraavanlaista testausmallia.
+
+Ensiksi etsitään kaikki mahdolliset paikat sovelluksesta, joista käyttäjä voi syöttää dataa. Tämä onnistuu leveyssuuntaista hakua (\textit{engl. Breadth-first search}) käyttämällä. Algoritmi toimii seuraavasti:
+\begin{enumerate}
+\item Alustetaan lista L jossa on ainoana jäsenenä etusivun URL. Etusivu merkataan käsittelemättökäks.
+
+\item Käydään listalta L läpi kaikki käsittelemättömiksi merkatut sivut ja merkataan ne käsitellyiksi. Jokaiselta sivulta kirjataan kaikki paikat joista käyttäjä voi syöttää dataa. Lopuksi etsitään sivulta kaikki linkit. Ne linkit jotka eivät vielä ole listalla L, lisätään listalle.
+
+\item Mikäli listalla on käsittelemättömiä linkkejä, palataan vaiheeseen 2.
+\end{enumerate}
+
+Tämän jälkeen luodaan mahdollisimman kattava lista erilaisista haitallisista syötteistä. Kaikkiin mahdollisiin paikkoihin joista voi syöttää dataa sisään kokeillaan kaikkia haitallisia syötteitä. Tietokannan palauttamasta arvosta voidaan päätellä onko injektio onnistunut vai ei. Esimerkiksi jos vastauksen HTTP statuskoodi on 200, kyseessä on haavoittuvuus.
+
+\pagebreak
 \subsection{SQL-Injektion ajoaikainen ehkäisy}
 \subsection {Jokin suojautumistapa}
 \section {Riskin minimointi}
