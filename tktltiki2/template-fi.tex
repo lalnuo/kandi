@@ -33,7 +33,7 @@
 \usepackage[pdftex,hidelinks]{hyperref}
 \usepackage{listings}
 \usepackage{xcolor}
-
+\usepackage{amsmath}
 \lstset{
 	keywordstyle=\color{black}\bfseries, % style for keywords
 	numbers=none, % where to put the line-numbers
@@ -146,7 +146,7 @@
 	\mainmatter       % clear page, start arabic page numbering
 	
 	\section{Johdanto}
-	Tämä kandidaatintutkielma esittelee mikä on SQL-injektio ja kuinka siltä suojaudutaan. Ensimmäisissä luvuissa esitellään mikä on SQL-injektio. SQL-Injektio esitellään ensin pääpiirteissään. Sen jälkeen esitellään miten se voidaan toteuttaa käytännössä, sekä millaisiin eri alatyyppeihin SQL-injektiot jaotellaan. Kun SQL-Injektion käsite ja lähestymistavat on esitelty, esitellään käytänteet joilla SQL-injektioita pyritään estämään.
+	Tämän kandidaatintutkielman päätavoite on esitellä selvittää kuinka SQL-injektiolta voidaan suojautua mahdollisimman tehokkaasti. Ensimmäisissä luvuissa esitellään mikä on SQL-injektio. SQL-Injektio esitellään ensin pääpiirteissään. Sen jälkeen esitellään miten se voidaan toteuttaa käytännössä, sekä millaisiin eri alatyyppeihin SQL-injektiot jaotellaan. Kun SQL-Injektion käsite ja lähestymistavat on esitelty, esitellään käytänteet joilla SQL-injektioita pyritään estämään.
 	
 	Aihe on tärkeä koska verkossa käsitellään jatkuvasti entistä enemmän arkaluontoisia tietoja. Verkossa hoidetaan asioita kuten laskujen maksaminen, hotellien varaus ja henkilökohtaisten viestien vaihtaminen. Yleensä tiedot tallennetaan relaatiotietokantoihin. Juuri tällaiset sovellukset voivat olla haavoittuvaisia SQL-Injektioille, ellei asiaa ole otettu huomioon. Lienee siis itsestäänselvää, että jokaisen tietokantasovelluksia ohjelmoivan on ymmärettävä mikä on SQL-injektio ja kuinka suojautua siltä.
 	
@@ -171,7 +171,7 @@
 	
 	\subsection{SQL-Injektio käytännössä}
 	
-	Esimerkiksi tuotteiden etsimiseen liittyvä sql-käsky voidaan rakentaa sovelluksessa seuraavalla tavalla:
+	Anleyn artikkelin "Advancen SQL Injections in SQL Server Applications" mukaan SQL-Injektio hyökkäys esiintyy sillon, kun hyökkääjä pääsee muuttamaan käskyn logiikkaa, semantiikkaa tai syntaksia. Tämä tapahtuu lisäämällä alkuperäiseen kyselyyn uusia SQL-avainsanoja tai operaattoreita \cite{definition}. Esimerkiksi tuotteiden etsimiseen liittyvä sql-käsky voidaan rakentaa sovelluksessa seuraavalla tavalla:
 	
 	\begin{lstlisting}
 	sql = "SELECT * FROM tuotteet
@@ -221,7 +221,6 @@
 		
 	\end{description}
 	
-	\pagebreak
 	
 	
 	\section {SQL-Injektiolta suojautuminen}
@@ -247,7 +246,10 @@
 	\subsection{Penetraatiotestaus}
 	
 	
-	Ei voida luottaa että edellä esiteltyjä meneltemiä muistettaisiin aina käyttää. Tämän takia sovellusta on tietoturvatestattava. Yang Haixia edottaa tutkielmassaan \cite{testing} seuraavanlaista testausmallia.
+	Ei voida luottaa että edellä esiteltyjä meneltemiä muistettaisiin aina käyttää. Tämän takia sovellusta on tietoturvatestattava. Penetraatiotestaus tarjoaa automatisoidun tavan etsiä sovelluksesta tietoturva-aukkoja, ilman että ohjelmoijan tarvitsee käsin tehdä lukuisa testajä jokaisen koodimuutoksen jälkeen. Penetraatiotestaus voidaan jakaa valkolaatikko- \textit{(engl. white-box testing)} ja musta laatikkotestaukseen \textit{(engl. black-box testing)}. Musta laatikko testauksessa ei nähdä itse ohjelman koodia. Ohjelmalle annetaan erilaisia syötteitä ja tutkitaan tulostetta. Tulosteesta päätellään tässä tapauksessa onko SQL-injektio tapahtunut vai ei. Valkolaatikko testaukseen
+	
+	\subsubsection{Musta laatikko penetraatiotestaus}
+	 Haixia edottaa artikkelissaan "A database security testing scheme of web application" \cite{testing} seuraavanlaista testausmallia.
 	
 	Ensiksi etsitään kaikki mahdolliset paikat sovelluksesta, joista käyttäjä voi syöttää dataa. Tämä onnistuu leveyssuuntaista hakua (\textit{engl. Breadth-first search}) käyttämällä. Algoritmi toimii seuraavasti:
 	\begin{enumerate}
@@ -260,11 +262,55 @@
 	
 	Tämän jälkeen luodaan mahdollisimman kattava lista erilaisista haitallisista syötteistä. Kaikkiin mahdollisiin paikkoihin joista voi syöttää dataa sisään kokeillaan kaikkia haitallisia syötteitä. Tietokannan palauttamasta arvosta voidaan päätellä onko injektio onnistunut vai ei. Esimerkiksi jos vastauksen HTTP statuskoodi on 200, kyseessä on haavoittuvuus.
 	
+	\subsubsection{Valkolaatikko penetraatiotestaus}
+	- static code analyzers
+	
 	\pagebreak
-	\subsection{SQL-Injektion ajoaikainen ehkäisy}
-	\subsection {Jokin suojautumistapa}
+	\subsection{AMNESIA Menetelmä}
+	
+	Halfonding ja Orson artikkelissa \cite{amnesia} esitellään SQL-injektioiden torjumiseksi AMNESIA tekniikkaa. AMNESIA on lyhenne sanoille "Analysis and Monitoring for NEutralizing SQL-Injection Attacks". Tekniikka koostuu neljästä osasta.
+	\begin{enumerate}
+		\item{Etsi suorituspaikat}
+		
+		Ensin ohjelman koodi skannataan. Skannauksessa etsitään koodista ne paikat, joissa tietokantakyselyjä suoritetaan. Näihin paikkoihin viitataan tässä tutkielmassa sanalla "suorituspaikka" \textit{(engl. hotspot)}. Esimerkiksi Javan tapauksessa etsitään koodista paikat joissa kutsutaan "java.sql.Statement.execute(String)" \space metodia.
+		\item{Rakenna sql query mallit}
+		
+		Seuraavaksi rakennetaan jokaiselle edellisessä kohdassa löydetylle suorituspaikalle oma mallinsa. Tämä onnistuu siten, että AMNESIA simuloi sovelluksen toimintaa Java String Analysis (JSA) kirjaston avulla. JSA Luo analyysin tuloksena epädetermistisen ääreellisen automaatin (NDFA), joka tunnistaa kaikki mahdolliset merkkijonot, jotka kysely voi saada arvokseen. Esimerkiksi allaoleva koodipätkä voi saada arvokseen joko: 
+		"SELECT info FROM kayttajat WHERE kayttajanimi = $\beta$"\space tai "SELECT info FROM kayttajat WHERE kayttajanimi='vieras'". Käyttäjän syötettä merkataan symbolilla $\beta$.
+		
+				\begin{lstlisting}
+				query = "SELECT info FROM users WHERE"
+				if (!kayttajanimi.empty) {
+					query += "kayttajanimi ='" + kayttajanimi + "'"
+				} else {
+					query += "kayttajanimi = vieras"
+				}
+				\end{lstlisting}
+		
+
+		\item{Instrument application}
+		
+		Seuraavaksi lisätään jokaiseen vaiheessa 1. löydettyyn suorituspaikkaan monitori. Monitori suoritetaan aina ennen itse tietokantakyselyä. Monitori ottaa parametriksi suorituspaikan uniikin ID:n ja merkkijonon jota ollaan suorittamassa. ID:n avulla monitori etsii kyseistä suorituspaikkaa vastaavan mallin. Alla sama koodi esimerkkinä: 
+		\begin{lstlisting}
+		if (monitor.hyvaksyy(<suortuspaikan id>, kysely)) {
+			return db.suorita(kysely);
+		}
+		\end{lstlisting}
+		\item{Ajonaikainen monitorointi}
+		
+		Ajonaikana ohjelma toimii normalisti kunnes se törmää suorituspaikkaan. Suorituspaikkaan törmättyään se antaa tarvittavat parametrit monitorille. Ensin monitori käsittelee kyselyn samalla tapaa kuin tietokanta sen käsittelisi. Tämän asiosta esimerkiksi erikoismerkit evaluoituvat niiden oikeaan arvoonsa. Tämä estää SQL-avainsanojen piilottamisen erikoismerkeillä. Kun kysely on käsitelty, tarkastetaan tunnistaako malli sen. Mikäli malli hyväksyy kyselyn se suoritetaan, muulloin malli tunnistaa sen SQL-injektioksi.
+		
+		Oletetaan että kyselymme olisi "SELECT info FROM users WHERE kayttajanimi='' OR 1=1. Vaiheessa 1. kuvatun koodipätkän automaatti jakautuisi kahtia. Koska automaatti tunnistaa vain kielet jotka loppuvat merkkiin "'", kyseinen kysely huomataan SQL-injektioksi.
+		
+		[tähän äskösen automaattikuva]
+	\end{enumerate}
+	\pagebreak
 	\section {Riskin minimointi}
 	\section {Yhteenveto}
+	- yksinkertaista suojauta
+	- kuitenkin muitakin riskejä kuten xss yms.
+	- 
+
 	
 	
 	
