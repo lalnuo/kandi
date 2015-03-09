@@ -34,6 +34,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{amsmath}
+\usepackage{graphicx}
 \lstset{
 	keywordstyle=\color{black}\bfseries, % style for keywords
 	numbers=none, % where to put the line-numbers
@@ -239,6 +240,9 @@
 		Datan validointi ei takaa suojaa SQL-injektiolta, mutta se tekee hyökkäyksestä vaikeampaa. Esimerkiksi syötteet jotka sisältää puolilainausmerkit voidaan estää kokonaan. Toisaalta tämä ei ole aina toivottua toimintaa, esim. nimi O'Brian ei tällöin toimisi \cite{validointi}. 
 		Käytössä voi olla myös luotettujen lista \textit{(engl. whitelist)}, jonne on listattu kaikki syötteelle sallitut arvot. Kaikkien sallittujen arvojen listaaminen voi kuitenkin olla vaikeaa.
 		
+		\subsection{Koodikatselmointi}
+		Antunesin ja kumppaneiden tekemässä vertailussa\cite{vertailu} vertailtiin staattisen koodianalyysin ja penetraatiotestaamisen eroja. Kumpikaan testaustapa ei löytänyt yli 51\% sovelluksen tietoturva-aukoista. Tällaisten aukkojen huomaaminen on kuitenkin mahdollista, kun ohjelman lähdekoodia katselmoi useammat henkilöt.
+		
 		\subsection{Hienojakoinen pääsynhallinta tietokantaan}
 		Tämä kappale keskittyy Roichmanin ja Gudesin artikkeliin "Fine-grained Access Control to Web Databases" \cite{access}.\space Artikkelin mukaan ennen web-sovellusten yleistymistä sovelluksia ajettiin käyttäjän omalla tietokoneella. Tyypillisellä sovelluksella oli kiinteä määrä  käyttäjiä. Tällaisessa sovelluskessa sovelluskerros kommunikoi suoraa tietokannan kanssa. Tämän seurauksena tietokanta tietää mikä käyttäjä sitä milloinkin käyttää. Täten on helppoa rajata käyttäjien oikeuksia.
 		
@@ -287,7 +291,7 @@
 		Hyökkääjä saisi vastauksena kaikki omat palkkatietonsa, mutta ei muiden käyttäjien, koska Palkka\_View saa saa parametriksi hyökkääjän oman AS\_KEY:n. Myöskään UNION injektio ei ole tässä tapauksessa mahdollinen, koska hyökkääjä ei tiedä muiden käyttäjien AS\_KEY:tä, joka tarvitaan Palkka\_Viewiin parametriksi.
 	
 	\section{Ajonaikainen SQL-injektoiden estäminen}
-	SQL-Injektioida voidaan yrittää havaita ja estää ajonaikana. Tätä varten on luotu useita työkaluja, kuten SQLCheck, SQLProb ja Candid. \cite{preventions}. Ajonaikaiseen SQL-injektioiden estämiseen on kehitetty monenlaisia tapoja. Tässä kappaleessa perehdytään tarkemmin AMNESIA työkalun toimintaan. 
+	SQL-Injektioida voidaan yrittää havaita ja estää ajonaikana. Tätä varten on luotu useita työkaluja, kuten SQLCheck, SQLProb ja Candid. \cite{preventions}. Ajonaikaiseen SQL-injektioiden estämiseen on kehitetty monenlaisia tapoja. Tässä kappaleessa perehdytään tarkemmin AMNESIA ja SQLrand menetelmiin.
 	
 	\subsection{AMNESIA}
 	
@@ -302,7 +306,7 @@
 		"SELECT info FROM kayttajat WHERE kayttajanimi = $\beta$"\space tai "SELECT info FROM kayttajat WHERE kayttajanimi='vieras'". Käyttäjän syötettä merkataan symbolilla $\beta$.
 		
 		\begin{lstlisting}
-		query = "SELECT info FROM users WHERE"
+		query = "SELECT info FROM kayttajat WHERE"
 		if (!kayttajanimi.empty) {
 		query += "kayttajanimi ='" + kayttajanimi + "'"
 		} else {
@@ -323,16 +327,20 @@
 		
 		Ajonaikana ohjelma toimii normalisti kunnes se törmää suorituspaikkaan. Suorituspaikkaan törmättyään se antaa tarvittavat parametrit monitorille. Ensin monitori käsittelee kyselyn samalla tapaa kuin tietokanta sen käsittelisi. Tämän asiosta esimerkiksi erikoismerkit evaluoituvat niiden oikeaan arvoonsa. Tämä estää SQL-avainsanojen piilottamisen erikoismerkeillä. Kun kysely on käsitelty, tarkastetaan tunnistaako malli sen. Mikäli malli hyväksyy kyselyn se suoritetaan, muulloin malli tunnistaa sen SQL-injektioksi.
 		
-		Oletetaan että kyselymme olisi "SELECT info FROM users WHERE kayttajanimi='' OR 1=1. Vaiheessa 1. kuvatun koodipätkän automaatti jakautuisi kahtia. Koska automaatti tunnistaa vain sellaiset kielet, jotka loppuvat merkkiin "'" heti käyttäjän syötteen jälkeen, kyseinen kysely huomataan SQL-injektioksi.
+		Oletetaan että kyselymme olisi "SELECT info FROM users WHERE kayttajanimi='' OR 1=1. Vaiheessa 1. kuvatun koodipätkän automaatti jakautuisi kahtia. Koska automaatti tunnistaa vain sellaiset kielet, jotka loppuvat merkkiin "\space'\space"\space heti käyttäjän syötteen jälkeen, kyseinen kysely huomataan SQL-injektioksi.
+			\end{enumerate}
+		\begin{figure}[h!]
+		\caption{Vaiheen 2. koodia vastaava automaatti}
+		\includegraphics[scale=0.5]{kandi}
+		\end{figure}
 		
-		\textbf{TÄHÄN KUVA YLLÄOLEVASTA AUTOMAATISTA}
-	\end{enumerate}
-	
+	\subsection{SQLRand}
+	SQLRand menetelmä esitellään Boydin ja Keromytisin artikkelissa "SQLrand: Preventing SQL Injection Attacks"\cite{sqlrand}. SQLRandissa on ideana, että normaalit SQL avainsanat kuten "SELECT"\space korvataan satunnaisilla avainsanoilla. Satunnaistaminen tapahtuu lisäämällä alkuperäisen avainsanan perään satunnainen numero. Täten hyökkääjä ei pysty satunnaista numeroa arvaamatta toteuttamaan SQL-injektiota, koska normaalien SQL avainsanojen käyttö aiheuttaa virheilmoituksen. Sovellus tietää virheilmoituksesta että kyseessä oli SQL-injektio.
 	\section{Penetraatiotestaus}
 	
 	 Vaikka sovellusta ohjelmoitaisiin hyvien ohjelmointikäytänteiden mukaisesti, siihen voi silti jäädä tietoturva-aukkoja. Tämän takia sovellusta on jatkuvasti tietoturvatestattava. 
 	 
-	 Penetraatiotestauksessa yritetään etsiä sovelluksesta tietoturva-aukkoja. Kun penetraatiotestaus on automatisoitua, ohjelmoijan ei tarvitse testata järjestelmäänsä käsin jokaisen muutoksen jälkeen. Automatisoitu testaus ei kuitenkaan ole virheetöntä. Se voi aiheuttaa turhia hälyytyksiä, tai olla hälyyttämättä kun pitäisi hälyyttää \cite{virheita}. 
+	 Penetraatiotestauksessa yritetään etsiä sovelluksesta tietoturva-aukkoja. Kun penetraatiotestaus on automatisoitua, ohjelmoijan ei tarvitse testata järjestelmäänsä käsin jokaisen muutoksen jälkeen. Automatisoitu testaus ei kuitenkaan ole virheetöntä. Se voi aiheuttaa turhia hälyytyksiä, tai olla hälyyttämättä kun pitäisi hälyyttää \cite{virheita}.  Aiemminkin mainitussa Antunesin ja kumppaneiden tekemässä vertailussa\cite{vertailu} huomattiin, että yli 30\% virheistä oli turhia hälyytyksiä. 
 	 
 	Musta laatikko -testauksessa testataan sovellusta erilaisia syötteitä vastaan. Tällaiseen testaamiseen ei vaadita pääsyä itse koodiin \cite{testing2}. Tämä on hyödyllistä esimerkiksi sellaisissa tapauksissa, kun osa ohjelman komponenteista on kolmannen osapuolen koodia, eikä siihen päästä käsiksi. Mustalaatikko testauksessa on ongelmana se, että tulos perustuu sovelluksen tulosteesta tehtyyn analyysiin. Tästä syystä kaikkia tietoturva-aukkoja ei välttämättä löydetä, tai jotain turvallista kohtaa koodista voidaan luulla tietoturva-aukoksi. Mustalaatikkotestaukseen löytyy useita valmiita työkaluja, kuten "Acunetix Web Vulnerability Scanner"\space ja sqlmap.
 	
@@ -356,7 +364,7 @@
 	
 	Tämän jälkeen luodaan mahdollisimman kattava lista erilaisista hyökkäyksistä. Kaikkiin mahdollisiin paikkoihin joista voi syöttää dataa kokeillaan haitallisia syötteitä. Tietokannan palauttamasta arvosta voidaan päätellä onko injektio onnistunut vai ei. Esimerkiksi jos vastauksen HTTP statuskoodi on 200, kyseessä on haavoittuvuus.
 	
-	\subsection{Esimerkkisyötteiden luominen}
+	\subsection{Testaussyötteiden luominen}
 	Artikkelissa "Automated Testing for SQL Injection Vulnerabilities: An input Mutation Approach"\cite{generation}\space ehdotetaan penetraatiotestauksessa käytettävien syötteiden luomiseen automatisoitua tekniikkaa nimeltään $\mu$SQLi. Tekniikassa on ideana manipuloida kelpaavaa syötettä erilaisilla mutaatio-operaatioilla. Mutaatio-operaatiot jaetaan artikkelin mukaan seuraavalla tavalla kolmeen eri osioon:
 	\begin{enumerate}
 	\item Käyttäytymistä muuttavat operaatiot
@@ -377,9 +385,13 @@
 	
 	
 	\section {Yhteenveto}
-	SQL-Injektioilta suojautuminen voidaan jakaa ohjelmointikäytänteisiin, ajonaikaiseen monitorointiin ja testaukseen. Periaatteessa jo hyvät ohjelmointikäytänteet riittävät sovelluksen suojautumiseen SQL-injektiolta. Ei kuitenkaan voida olla varmoja muistetaanko hyviä ohjelmointikäytänteitä aina noudattaa. Tästä syystä on sovellusta hyvä testata. Testauskaan ei kuitenkaan ole täysin luotettavaa.
+	(pahasti kesken)
 	
-	SQL-injektio ei kuitenkaan ole ainut tietoturvariski. Useiden eri suojausmenetelmien yhdistely vie aikaa ohjelmoijalta, sekä saattaa kuluttaa ohjelman suorituskykyä. 
+	
+	SQL-Injektioilta suojautuminen voidaan jakaa ohjelmointikäytänteisiin, ajonaikaiseen monitorointiin ja testaukseen. Periaatteessa jo hyvät ohjelmointikäytänteet riittävät sovelluksen suojautumiseen SQL-injektiolta. Ei kuitenkaan voida olla varmoja muistetaanko hyviä ohjelmointikäytänteitä aina noudattaa. Tästä syystä on sovellusta tulee penetraatiotestata.
+	Penetraatiotestauksessa taas on ongelmana sen luotettavuus. Heikon luotettavuuden takia ei voida koskaan olla varmoja onko sovellus täysin turvallinen. Mitä enemmän menetelmiä käyttää, sitä turvallisempi sovellus on. Menetelmien yhdistely on kuitenkin aikaa vievää. Lisäksi osa menetelmistä tekee sovelluksesta, tai sen tuottamisesta hitaampaa ja monimutkaisempaa. On siis vaikeaa sanoa milloin sovellus on tarpeeksi hyvin suojattu.
+	
+	SQL-injektio ei kuitenkaan ole ainut tietoturvariski.
 	
 	
 	
