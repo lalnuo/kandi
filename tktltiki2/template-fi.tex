@@ -146,23 +146,15 @@
 	\mainmatter       % clear page, start arabic page numbering
 	
 	\section{Johdanto}
-	Tämän kandidaatintutkielman päätavoite on selvittää kuinka SQL-injektiolta voidaan suojautua mahdollisimman tehokkaasti. Tutkielmani jakautuu kolmeen pääaiheeseen. Ensimmäisissä luvuissa esitellään mikä on SQL-injektio. SQL-Injektio esitellään ensin pääpiirteissään. Sen jälkeen esitellään miten se voidaan toteuttaa käytännössä, sekä millaisiin eri alatyyppeihin SQL-injektiot jaotellaan. Toisessa kappaleessa tutkitaan erilaisia menetelmiä ja ohjelmointikäytänteitä joilla SQL-injektioita voidaan ehkäistä. Kolmannessa kappaleessa keskitytään sovelluksen penetraatiotestaamisen erilaisilla menetelmillä.
+	Tämän kandidaatintutkielman päätavoite on selvittää kuinka SQL-injektiolta voidaan suojautua mahdollisimman tehokkaasti. Tutkielmassa esitellään ensiksi mikä on SQL-injektio. Esittelyssä paneudutaan siihen miten SQL-injektio voidaan toteuttaa käytännössä, sekä millaisiin eri alatyyppeihin SQL-injektiot voidaan jaotella. Tämän jälkeen esitellään erilaisia tapoja suojautua SQL-injektioilta. Suojautumistavat on jaettu kolmeen eri osa-alueeseen: ohjelmointikäytänteet, ajonaikainen monitorointi ja sovelluksen testaaminen. Hyvien ohjelmointikäytänteiden ja ajonaikaisen monitoroinnin avulla pyritään toteuttamaan sovellus johon SQL-injektiot eivät ole mahdollisia. Jotta tavoitteen suojautumisen onnistumisesta voitaisiin olla varmoja, tulee sovellusta testata. Tutkielman testausosiossa esitellään automatisoituja tapoja toteuttaa sovelluksen testaaminen.
 	
 	Tutkimusten mukaan 8\% web-palveluista sisältää haavoittuvaisuuksia.  87\% Näistä haavoittuvuuksista on SQL-injektio haavoittuvuuksia \cite{detection}. Yleisyytensä lisäksi SQL-injektio on myös hyvin vaarallinen. Onnistuneen SQL-injektion avulla hyökkääjä voi suorittaa huonosti suojatussa tietokannassa mitä tahansa operaatioita. Tämä mahdollistaa esimerkiksi arkuluontoisten tietojen lukemisen ja muokkaamisen, tai esimerkiksi sovelluksen autentikaation ohittamisen. SQL-Injektiolla on vuosien aikana tehty lukuisia murtoja. SQL-Injektio mielletään monesti amatöörien ongelmaksi, mutta  sen avulla on murretty myös paljon ammattilaisten ohjelmoimia järjestelmiä. Yksi suurimmista SQL-Injektion avulla tehdyistä murroista tehtiin Guess.com:ille. Hyökkääjä sai käsinsä 200 000 ihmisen nimet ja luottokorttitiedot.
 	
-	Sen lisäksi että SQL-injektio on yleisin tietoturva-aukko, se on myös helppoa toteuttaa ilman suurempaa ymmärrystä sen toiminnasta. SQL-Injektioiden tekemiseen löytyy valmiita työkaluja, jotka ilmoittavat sivuston heikkouksista lähes tulkoon napin painalluksella. Tästä esimerkkinä "sqlmap" työkalu joka on tehty penetraatiotestaamista varten \textit{(engl. penetration testing)}.
+	Sen lisäksi että SQL-injektio on yleisin tietoturva-aukko, se on myös helppoa toteuttaa ilman syvällistä ymmärrystä sen toiminnasta. Esimerkiksi penetraatiotestaus \textit{(engl. penetration testing)} työkalut, kuten "sqlmap"\space, ilmoittavat sivuston heikkouksita melkeinpä napin painalluksella. Vaikka sqlmapin kaltaiset työkalut onkin tehty nimenomaan penetraatiotestaukseen, mikään ei estä hyökkääjää käyttämästä sitä apuna.
 	
-	Erilaisten palveluiden siirtyessä verkkoon, verkossa käsitellään jatkuvasti entistä enemmän arkaluontoisia tietoja. Verkossa hoidetaan asioita kuten laskujen maksaminen, hotellien varaus ja henkilökohtaisten viestien vaihtaminen. Yleensä tiedot tallennetaan relaatiotietokantoihin. Juuri tällaiset sovellukset voivat olla haavoittuvaisia SQL-Injektioille, ellei asiaa ole otettu huomioon. Tästä syystä jokaisen tietokantasovelluksia ohjelmoivan on ymmärettävä mikä on SQL-injektio ja kuinka suojautua siltä voidaan suojautua.
+	Erilaisten palveluiden siirtyessä verkkoon, verkossa käsitellään jatkuvasti entistä enemmän arkaluontoisia tietoja. Verkossa hoidetaan asioita kuten laskujen maksaminen, hotellien varaus ja henkilökohtaisten viestien vaihtaminen. Yleensä tiedot tallennetaan relaatiotietokantoihin. Juuri tällaiset sovellukset voivat olla haavoittuvaisia SQL-Injektioille, ellei siltä olla suojauduttu oikeaoppisesti. Tästä syystä jokaisen tietokantasovelluksia ohjelmoivan on ymmärettävä mikä on SQL-injektio ja kuinka suojautua siltä voidaan suojautua.
 	
 
-	
-	\section{Käsitteitä}
-	-SQL
-	- SQL Injection
-	out of band
-	inband
-	\pagebreak
-	% Write some science here.
 	
 	
 	
@@ -233,9 +225,6 @@
 	
 	
 	\section {Tietoturvallisen ohjelman toteutus}
-	SQL-Injektiolta suojautumiseen on kehitetty useita keinoja.  \textit{TÄHÄN TIIVISTELMÄÄ ALLAOLEVISTA YMS}
-	
-
 		\subsection{Parametrisoidut kyselyt}
 		Parametrisoiduissa kyselyssä luodaan SQL-kyselystä pohja, johon lisätään paikanpitäjät \textit{(engl. placeholder)}. Parametrisoitu kysely annetaan tietokannalle. Tietokanta kääntää ja optimoi kyselyn pohjan vain kerran. Tietokanta ei kuitenkaan vielä suorita varsinaista kyselyä, koska varsinaiset arvot puuttuvat. Tällainen toimintatapa parantaa tietoturvan lisäksi myös suorituskykyä.
 		
@@ -249,8 +238,6 @@
 		\subsection{Datan validointi}
 		Datan validointi ei takaa suojaa SQL-injektiolta, mutta se tekee hyökkäyksestä vaikeampaa. Esimerkiksi syötteet jotka sisältää puolilainausmerkit voidaan estää kokonaan. Toisaalta tämä ei ole aina toivottua toimintaa, esim. nimi O'Brian ei tällöin toimisi \cite{validointi}. 
 		Käytössä voi olla myös luotettujen lista \textit{(engl. whitelist)}, jonne on listattu kaikki syötteelle sallitut arvot. Kaikkien sallittujen arvojen listaaminen voi kuitenkin olla vaikeaa.
-
-		\subsection{Arkaluontoisen datan säilytys}
 		
 		\subsection{Hienojakoinen pääsynhallinta tietokantaan}
 		Tämä kappale keskittyy Roichmanin ja Gudesin artikkeliin "Fine-grained Access Control to Web Databases" \cite{access}.\space Artikkelin mukaan ennen web-sovellusten yleistymistä sovelluksia ajettiin käyttäjän omalla tietokoneella. Tyypillisellä sovelluksella oli kiinteä määrä  käyttäjiä. Tällaisessa sovelluskessa sovelluskerros kommunikoi suoraa tietokannan kanssa. Tämän seurauksena tietokanta tietää mikä käyttäjä sitä milloinkin käyttää. Täten on helppoa rajata käyttäjien oikeuksia.
@@ -299,6 +286,9 @@
 		\end{lstlisting}
 		Hyökkääjä saisi vastauksena kaikki omat palkkatietonsa, mutta ei muiden käyttäjien, koska Palkka\_View saa saa parametriksi hyökkääjän oman AS\_KEY:n. Myöskään UNION injektio ei ole tässä tapauksessa mahdollinen, koska hyökkääjä ei tiedä muiden käyttäjien AS\_KEY:tä, joka tarvitaan Palkka\_Viewiin parametriksi.
 	
+	\section{Ajonaikainen SQL-injektoiden estäminen}
+	SQL-Injektioida voidaan yrittää havaita ja estää ajonaikana. Tätä varten on luotu useita työkaluja, kuten SQLCheck, SQLProb ja Candid. \cite{preventions}. Ajonaikaiseen SQL-injektioiden estämiseen on kehitetty monenlaisia tapoja. Tässä kappaleessa perehdytään tarkemmin AMNESIA työkalun toimintaan. 
+	
 	\subsection{AMNESIA}
 	
 	Halfonding ja Orson artikkelissa \cite{amnesia} esitellään SQL-injektioiden torjumiseksi AMNESIA tekniikkaa. AMNESIA on lyhenne sanoille "Analysis and Monitoring for NEutralizing SQL-Injection Attacks". Tekniikka koostuu neljästä osasta.
@@ -338,14 +328,15 @@
 		\textbf{TÄHÄN KUVA YLLÄOLEVASTA AUTOMAATISTA}
 	\end{enumerate}
 	
-	\section{Ohjelmiston testaus SQL-injektioiden varalta}
+	\section{Penetraatiotestaus}
 	
-	 Vaikka sovellusta ohjelmoitaisiin edellisen kappaleen neuvojen mukaisesti, siihen voi silti jäädä tietoturva-aukkoja. Tämän takia sovellusta on jatkuvasti tietoturvatestattava. Penetraatiotestauksessa yritetään etsiä sovelluksesta tietoturva-aukkoja. Kun penetraatiotestaus on automatisoitua, ohjelmoijan ei tarvitse testata järjestelmäänsä käsin jokaisen muutoksen jälkeen. Automatisoitu testauskaan ei ole virheetöntä, sillä se voi aiheuttaa turhia hälyytyksiä, tai olla hälyyttämättä kun pitäisi hälyyttää \cite{virheita}. Penetraatiotestaus voidaan jakaa kahteen alaosaan, musta laatikko -testaukseen ja valkolaatikko testaukseen.
+	 Vaikka sovellusta ohjelmoitaisiin hyvien ohjelmointikäytänteiden mukaisesti, siihen voi silti jäädä tietoturva-aukkoja. Tämän takia sovellusta on jatkuvasti tietoturvatestattava. 
+	 
+	 Penetraatiotestauksessa yritetään etsiä sovelluksesta tietoturva-aukkoja. Kun penetraatiotestaus on automatisoitua, ohjelmoijan ei tarvitse testata järjestelmäänsä käsin jokaisen muutoksen jälkeen. Automatisoitu testaus ei kuitenkaan ole virheetöntä. Se voi aiheuttaa turhia hälyytyksiä, tai olla hälyyttämättä kun pitäisi hälyyttää \cite{virheita}. 
+	 
+	Musta laatikko -testauksessa testataan sovellusta erilaisia syötteitä vastaan. Tällaiseen testaamiseen ei vaadita pääsyä itse koodiin \cite{testing2}. Tämä on hyödyllistä esimerkiksi sellaisissa tapauksissa, kun osa ohjelman komponenteista on kolmannen osapuolen koodia, eikä siihen päästä käsiksi. Mustalaatikko testauksessa on ongelmana se, että tulos perustuu sovelluksen tulosteesta tehtyyn analyysiin. Tästä syystä kaikkia tietoturva-aukkoja ei välttämättä löydetä, tai jotain turvallista kohtaa koodista voidaan luulla tietoturva-aukoksi. Mustalaatikkotestaukseen löytyy useita valmiita työkaluja, kuten "Acunetix Web Vulnerability Scanner"\space ja sqlmap.
 	
-	\subsection{Musta laatikko -testaus}
-	Musta laatikko -testauksessa testataan sovellusta erilaisia syötteitä vastaan. Tällaiseen testaamiseen ei vaadita pääsyä itse koodiin \cite{testing2}. Tämä on hyödyllistä esimerkiksi sellaisissa tapauksissa, kun osa ohjelman komponenteista on kolmannen osapuolen koodia, eikä siihen päästä käsiksi. Mustalaatikko testauksessa on ongelmana se, että tulos perustuu sovelluksen tulosteesta tehtyyn analyysiin. Tästä syystä kaikkia tietoturva-aukkoja ei välttämättä löydetä, tai jotain turvallista kohtaa koodista voidaan luulla tietoturva-aukoksi.
-	
-	
+	\subsection{Penetraatiotestaus käytännössä}
 	 Haixia edottaa artikkelissaan "A database security testing scheme of web application" \cite{testing} seuraavanlaista testausmallia.
 	
 	Ensiksi etsitään kaikki mahdolliset paikat sovelluksesta, joista käyttäjä voi syöttää dataa. Tämä onnistuu leveyssuuntaista hakua (\textit{engl. Breadth-first search}) käyttämällä. Algoritmi toimii seuraavasti:
@@ -354,33 +345,41 @@
 		
 		\item Käydään listalta läpi kaikki käsittelemättömiksi merkatut sivut. Kunkin sivun kohdalla tehdään seuraavat vaiheet:
 		
-		1. Otetaan talteen kaikki paikat joista käyttäjä voi syöttää dataa.
+		- Otetaan talteen kaikki paikat joista käyttäjä voi syöttää dataa.
 		
-		2. Etsitään sivulta kaikki linkit ja lisätään listalle ne jotka eivät vielä ole siellä.
+		- Etsitään sivulta kaikki linkit ja lisätään listalle ne jotka eivät vielä ole siellä.
 		
-		3. Merkataan sivu käsitellyksi.
+		- Merkataan sivu käsitellyksi.
 		
 		\item Mikäli listalla on käsittelemättömiä linkkejä, palataan vaiheeseen 2.
 	\end{enumerate}
 	
-	Tämän jälkeen luodaan mahdollisimman kattava lista erilaisista haitallisista syötteistä. Kaikkiin mahdollisiin paikkoihin joista voi syöttää dataa kokeillaan kaikkia haitallisia syötteitä. Seuraavassa kappaleessa palataan siihen, kuinka haitalliset syötteet voidaan luoda. Tietokannan palauttamasta arvosta voidaan päätellä onko injektio onnistunut vai ei. Esimerkiksi jos vastauksen HTTP statuskoodi on 200, kyseessä on haavoittuvuus.
+	Tämän jälkeen luodaan mahdollisimman kattava lista erilaisista hyökkäyksistä. Kaikkiin mahdollisiin paikkoihin joista voi syöttää dataa kokeillaan haitallisia syötteitä. Tietokannan palauttamasta arvosta voidaan päätellä onko injektio onnistunut vai ei. Esimerkiksi jos vastauksen HTTP statuskoodi on 200, kyseessä on haavoittuvuus.
 	
-	Mustalaatikkotestaukseen löytyy useita valmiita työkaluja, kuten "Acunetix Web Vulnerability Scanner"\space ja sqlmap.
+	\subsection{Esimerkkisyötteiden luominen}
+	Artikkelissa "Automated Testing for SQL Injection Vulnerabilities: An input Mutation Approach"\cite{generation}\space ehdotetaan penetraatiotestauksessa käytettävien syötteiden luomiseen automatisoitua tekniikkaa nimeltään $\mu$SQLi. Tekniikassa on ideana manipuloida kelpaavaa syötettä erilaisilla mutaatio-operaatioilla. Mutaatio-operaatiot jaetaan artikkelin mukaan seuraavalla tavalla kolmeen eri osioon:
+	\begin{enumerate}
+	\item Käyttäytymistä muuttavat operaatiot
 	
-	\subsubsection{Syötteiden luominen}
+	Esimerkiksi operaatiot jotka lisäävät AND tai OR lauseen, tai operaatiot joissa lisätään puolipiste ja kokonaan uusi SQL lause. 
 	
-	\subsection{Valkolaatikkotestaus}
-	- static code analyzers
-
+	\item Syntax-Repairing Operators
 	
-	\pagebreak
+	Lisää kyselyyn esimerkiksi sulut, kommenttimerkin tai heittomerkin.
 	
-	\pagebreak
+	\item Obfuskointi operaatiot
+	
+	Esimerkiksi muuttaa kyselyssä käytettävää enkoodausta tai muuttaa totuuslauseketta ilman että sen arvo muuttuu.
+	\end{enumerate}
+	
+	Toimivaan syötteeseen voidaa lisätä yksi tai useampi mutaatio-operaatio. Artikkelin mukaan useasti yksittäinen operaatio huomataan, mutta yhdistelmät saattavat silti jäädä huomaamatta. Mutaatioiden tekeminen aloitetaan toimivasta syötteestä, koska sillä vältetään se, että syöte hylättäisiin välittömästi. Lisäksi toimivat syötteet täyttävät todennäköisemmin syötevalidoinnit. 
+	
+	
+	
 	\section {Yhteenveto}
-	- yksinkertaista suojauta
-	- kuitenkin muitakin riskejä kuten xss yms.
-	- 
-
+	SQL-Injektioilta suojautuminen voidaan jakaa ohjelmointikäytänteisiin, ajonaikaiseen monitorointiin ja testaukseen. Periaatteessa jo hyvät ohjelmointikäytänteet riittävät sovelluksen suojautumiseen SQL-injektiolta. Ei kuitenkaan voida olla varmoja muistetaanko hyviä ohjelmointikäytänteitä aina noudattaa. Tästä syystä on sovellusta hyvä testata. Testauskaan ei kuitenkaan ole täysin luotettavaa.
+	
+	SQL-injektio ei kuitenkaan ole ainut tietoturvariski. Useiden eri suojausmenetelmien yhdistely vie aikaa ohjelmoijalta, sekä saattaa kuluttaa ohjelman suorituskykyä. 
 	
 	
 	
