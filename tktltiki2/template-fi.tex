@@ -147,35 +147,35 @@
 	\mainmatter       % clear page, start arabic page numbering
 	
 	\section{Johdanto}
-	Tämän kandidaatintutkielman päätavoite on selvittää kuinka SQL-injektiolta voidaan suojautua mahdollisimman tehokkaasti. Tutkielmassa esitellään ensiksi mikä on SQL-injektio. Esittelyssä paneudutaan siihen miten SQL-injektio voidaan toteuttaa käytännössä, sekä millaisiin eri alatyyppeihin SQL-injektiot voidaan jaotella. Tämän jälkeen esitellään erilaisia tapoja suojautua SQL-injektioilta. Suojautumistavat on jaettu kolmeen eri osa-alueeseen: ohjelmointikäytänteet, ajonaikainen monitorointi ja sovelluksen testaaminen. Hyvien ohjelmointikäytänteiden ja ajonaikaisen monitoroinnin avulla pyritään toteuttamaan sovellus johon SQL-injektiot eivät ole mahdollisia. Jotta tavoitteen suojautumisen onnistumisesta voitaisiin olla varmoja, tulee sovellusta testata. Tutkielman testausosiossa esitellään automatisoituja tapoja toteuttaa sovelluksen testaaminen.
+	Tämän kandidaatintutkielman päätavoite on selvittää kuinka SQL-injektiolta voidaan suojautua mahdollisimman tehokkaasti. Tutkielman ensimmäisessä osassa esitellään SQL-injektio. Esittelyssä paneudutaan siihen miten SQL-injektio voidaan toteuttaa käytännössä, sekä millaisiin eri alatyyppeihin SQL-injektiot voidaan jaotella. Tämä on välttämätöntä, jotta lukija ymmärtää syvällisesti millaista hyökkäystä vastaan ollaan puolustautumassa. Tämän jälkeen esitellään erilaisia tapoja suojautua SQL-injektioilta. Suojautumistavat on jaettu kolmeen eri osa-alueeseen: ohjelmointikäytänteet, ajonaikainen monitorointi ja sovelluksen testaaminen. Hyvien ohjelmointikäytänteiden ja ajonaikaisen monitoroinnin avulla pyritään toteuttamaan sovellus johon SQL-injektiot eivät ole mahdollisia. Jotta suojautumisen onnistumisesta voitaisiin olla varmoja, tulee sovellusta testata. Tutkielman testausosiossa esitellään automatisoituja tapoja toteuttaa sovelluksen testaaminen.
 	
-	Tutkimusten mukaan 8\% web-palveluista sisältää haavoittuvaisuuksia.  87\% Näistä haavoittuvuuksista on SQL-injektio haavoittuvuuksia \cite{detection}. Yleisyytensä lisäksi SQL-injektio on myös hyvin vaarallinen. Onnistuneen SQL-injektion avulla hyökkääjä voi suorittaa huonosti suojatussa tietokannassa mitä tahansa operaatioita. Tämä mahdollistaa esimerkiksi arkuluontoisten tietojen lukemisen ja muokkaamisen, tai esimerkiksi sovelluksen autentikaation ohittamisen. SQL-Injektiolla on vuosien aikana tehty lukuisia murtoja. SQL-Injektio mielletään monesti amatöörien ongelmaksi, mutta  sen avulla on murretty myös paljon ammattilaisten ohjelmoimia järjestelmiä. Yksi suurimmista SQL-Injektion avulla tehdyistä murroista tehtiin Guess.com:ille. Hyökkääjä sai käsinsä 200 000 ihmisen nimet ja luottokorttitiedot.
+	Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, vaan osaan metodeista perehdytään myös tarkemmin. Tämä auttaa lukijaa ymmärtämään, miten valmiit ratkaisumallit toimivat. Kun ohjelmoija ymmärtää miten hänen valmitsemansa suojautumismetodit toimivat, hän tuntee myös suojauksen heikkoudet ja vahvuudet.
 	
-	Sen lisäksi että SQL-injektio on yleisin tietoturva-aukko, se on myös helppoa toteuttaa ilman syvällistä ymmärrystä sen toiminnasta. Esimerkiksi penetraatiotestaus \textit{(engl. penetration testing)} työkalut, kuten "sqlmap"\space, ilmoittavat sivuston heikkouksita melkeinpä napin painalluksella. Vaikka sqlmapin kaltaiset työkalut onkin tehty nimenomaan penetraatiotestaukseen, mikään ei estä hyökkääjää käyttämästä sitä apuna.
+	Tutkimusten mukaan 8\% web-palveluista sisältää haavoittuvaisuuksia.  87\% Näistä haavoittuvuuksista on SQL-injektio haavoittuvuuksia \cite{detection}. Yleisyytensä lisäksi SQL-injektio on myös hyvin vaarallinen. Onnistuneen SQL-injektion avulla hyökkääjä voi suorittaa huonosti suojatussa tietokannassa mitä tahansa operaatioita. Tämä mahdollistaa esimerkiksi arkuluontoisten tietojen lukemisen ja muokkaamisen, tai esimerkiksi sovelluksen autentikaation ohittamisen. SQL-Injektiolla on vuosien aikana tehty lukuisia murtoja. SQL-Injektio mielletään monesti amatöörien ongelmaksi, mutta  sen avulla on murrettu myös paljon ammattilaisten ohjelmoimia järjestelmiä. Yksi suurimmista SQL-Injektion avulla tehdyistä murroista tehtiin Guess.com:ille. Hyökkääjä sai käsinsä 200 000 ihmisen nimet ja luottokorttitiedot.
 	
-	Erilaisten palveluiden siirtyessä verkkoon, verkossa käsitellään jatkuvasti entistä enemmän arkaluontoisia tietoja. Verkossa hoidetaan asioita kuten laskujen maksaminen, hotellien varaus ja henkilökohtaisten viestien vaihtaminen. Yleensä tiedot tallennetaan relaatiotietokantoihin. Juuri tällaiset sovellukset voivat olla haavoittuvaisia SQL-Injektioille, ellei siltä olla suojauduttu oikeaoppisesti. Tästä syystä jokaisen tietokantasovelluksia ohjelmoivan on ymmärettävä mikä on SQL-injektio ja kuinka suojautua siltä voidaan suojautua.
+	Sen lisäksi että SQL-injektio on yleisin tietoturva-aukko, se on myös helppoa toteuttaa ilman syvällistä ymmärrystä sen toiminnasta. Esimerkiksi penetraatiotestaustyökalut , kuten "sqlmap"\space, ilmoittavat sivuston heikkouksita melkeinpä napin painalluksella. Vaikka sqlmapin kaltaiset työkalut onkin tehty nimenomaan penetraatiotestaukseen, mikään ei estä hyökkääjää käyttämästä niitä apuna hyökkäyksissä.
 	
-
+	Toisaalta SQL-injektota ei ole myöskään vaikeaa estää, mikäli ohjelmoija ymmärtää kuinka SQL-injektio toimii. Nykyaikaiset web-applikaatioiden viitekehykset, sekä ohjelmointikielet tarjoavat työkaluja SQL-injektioiden torjumiseen. Työkalujen käytöstä on tehty niin yksinkertaista, että ohjelmoijan tarvtisee vain muistaa käyttää niitä oikeissa paikoissa lähdekoodia. Esimerkiksi Ruby on Rails:issa  "Model.find\_by\_something(parametri)"\space hoitaa itsestään parametrin tarkastamisen ja käsittelyn SQL-injektoin varalta. Kuitenkin esimerkiksi "Model.where(parametri)"\space -metodi on altis SQL-injektoille. Niinpä ohjelmoija ei voi luottaa viitekehyksen tai ohjelmointikielen hoitavan automaattisesti kaikkea. Tästä syystä ymmärrys SQL-injektioiden toiminnasta on yhä nykyaikanakin välttämätöntä.  
 	
+	Viimeaikoina entistä useampi palvelu on siirtynyt verkkoon. Tämän seurauksena verkossa käsitellään jatkuvasti entistä enemmän arkaluontoisia tietoja. Verkossa hoidetaan asioita kuten laskujen maksaminen, hotellien varaus ja henkilökohtaisten viestien vaihtaminen. Yleensä tiedot tallennetaan relaatiotietokantoihin. Juuri tällaiset sovellukset voivat olla haavoittuvaisia SQL-Injektioille, ellei niiltä olla suojauduttu oikeaoppisesti. Tästäkin syystä jokaisen tietokantasovelluksia ohjelmoivan on ymmärettävä mikä on SQL-injektio ja kuinka suojautua siltä voidaan suojautua.
 	
 	
 	\section{SQL-Injektio}
-	
-	Anleyn artikkelin "Advancen SQL Injections in SQL Server Applications"\space mukaan SQL-Injektio hyökkäys esiintyy sillon, kun hyökkääjä pääsee muuttamaan SQL käskyn logiikkaa, semantiikkaa tai syntaksia. Tämä tapahtuu lisäämällä alkuperäiseen kyselyyn uusia SQL avainsanoja tai operaattoreita.
+	Anleyn artikkelin "Advancen SQL Injections in SQL Server Applications"\cite{definition}\space mukaan SQL-Injektio hyökkäys esiintyy sillon, kun hyökkääjä pääsee muuttamaan SQL käskyn logiikkaa, semantiikkaa tai syntaksia. Tämä tapahtuu lisäämällä alkuperäiseen kyselyyn uusia SQL avainsanoja tai operaattoreita.
 	Mikäli sovelluksen tietokantaoikeuksia ei ole erikseen rajattu, hyökkääjä voi onnistuneen SQL-injektion seurauksena suorittaa mitä tahansa tietokantapalvelimen tukemia SQL-kyselyitä. Jotkut tietokantapalvelimet sallivat myös käyttöjärjestelmätason komentojen suorittamisen. Tällöin hyökkääjän on mahdollista suorittaa myös muunlaisia hyökkäyksiä. 
 	
 	SQL-Injektio on mahdollinen vain silloin kun käyttäjältä tulevaa tietoa käytetään osana tietokantapalvelimelle tehtävää kyselyä. Tämä on kuitenkin varsin tavallinen tarve sovelluksissa. Tietokannassa voidaan säilyttää esimerkiksi käyttäjätunnuksia ja salasanoja. Näin ollen kirjautuessa järjestelmään käyttäjän antamaa syötettä käytetään osana SQL-kyselyä.
 	
 	\subsection{SQL-Injektio käytännössä}
 	
- Esimerkiksi tuotteiden etsimiseen liittyvä SQL-käsky voidaan rakentaa huonosti suunitellussa sovelluksessa seuraavalla tavalla:
+ Esimerkiksi tuotteiden etsimiseen liittyvä SQL-käsky voidaan rakentaa SQL-injektiolle alttiissa sovelluksessa seuraavalla tavalla:
  
 	\begin{lstlisting}
 	sql = "SELECT * FROM tuotteet
-	WHERE nimi ='" + params[:tuotenimi]
+	WHERE nimi ="'" + params[:tuotenimi] + "'"
 	\end{lstlisting}
 	
-	Mikäli käyttäjä antaa nimekseen "'; DROP TABLE tuottet'. Valmis kysely tietokannalle näyttää seuraavalta:
+	Mikäli käyttäjä antaa nimekseen "\space'; DROP TABLE tuottet'. Valmis kysely tietokannalle näyttää seuraavalta:
 	
 	\begin{lstlisting}[language=sql]
 	sql = "SELECT * FROM tuotteet
@@ -184,20 +184,41 @@
 	
 	Kyseinen kysely etsii ensin kaikki tuotteet joiden nimi on tyhjä. Seuraavaksi suoritetaan komento "DROP TABLE tuotteet", joka poistaa koko tuotteet taulun.
 	
-	"DROP TABLE tuotteet"\space tilalla olisi voinut olla mikä tahansa muukin SQL-kysely. Esimerkiksi kaikkien tuotteiden listaamiseen hyökkääjä olisi voinut käyttää tuotenimeä joka sisältää jonkin tautologian esimerkiksi "'; OR 1=1". Liittääkseen vastaukseen jonkin muun taulun hyökkääjä olisi voinut käyttää UNION:ia.
+	\subsection{SQL-Injektio hyökkäykset}
+	
+	Aiemmassa kappaleessa mainitun hyökkäyksen sijaan hyökkääjä olisi voinut käyttää esimerkiksi jotakin Srivastavan artikkelissa "Algorithm to prevent back end database against SQL injection attacks"\cite{piggy} esitellyistä menetelmistä:  
+		\begin{description}
+			
+		\item[Tautologia] \hfill
+		
+		Hyökkääjä voi käyttää tuotenimeä, joka sisältää jonkin tautologian esimerkiksi "'; OR 1=1". Tällöin hyökkääjä olisi saanut vastauksena kaikki tuotteet.
+		
+		\item[Kommentti] \hfill
+		
+		Mikäli tuote olisi vaatinut myös tuotekoodin, eli kyselyn muotoilu olisi ollut esimerkiksi seuraavanlainen:
+			\begin{lstlisting}[language=sql]
+				sql = "SELECT * FROM tuotteet
+				WHERE nimi ='" + params[:tuotenimi] AND tuotekoodi ='"params[:tuotekoodi]"'
+			\end{lstlisting}
+			Hyökkääjä voi kirjoittaa tuotenimeksi "Haluttu tuote'; --". Hyökkäyksen onnistuessa loput kyselystä muuttuu kommentoiduksi. Tällöin tuotteen tiedot palautetaan, vaikka hyökkääjä ei tietäisi tuotekoodia.
+			
+		\item[Union kysely] \hfill
+		
+		Hyökkääjä voi kirjoittaa tuotenimeksi esimerkiksi "Haluttu tuote' UNION SELECT * FROM kayttajatiedot". Hyökkäyksen onnistuessa vastaukseen sisältyy myös koko taulun "kayttajatiedot"\space sisältö.
+	\end{description}
 	
 	\subsubsection{Obfuskointi}
 	
-	Salgadon kirjoittaman "SQL Injection Optimization and Obfuscation Techniques"\cite{encoding}\space artikkelin mukaan erilaisia palomuureja voidaan yrittää kiertää obfuskoinnilla. Yksinkertaisimillaan obfuskointi voi olla esimerkiksi "DROP"\space avainsanan muuttaminen "DroP":iksi. 
+	Ylläolevat esimerkit eivät todennäköisesti toimi sovelluksessa, joka on suojattu SQL-injektioilta. Salgadon kirjoittaman "SQL Injection Optimization and Obfuscation Techniques"\cite{encoding}\space artikkelin mukaan erilaisia palomuureja voidaan yrittää kiertää obfuskoinnilla. Yksinkertaisimillaan obfuskointi voi olla esimerkiksi "DROP"\space avainsanan muuttaminen "DroP":iksi.
 	
 	Monet hienostuneemmat tavat käyttävät SQL-injektioiden piilottamiseen esimerkiksi erilaisia enkoodauksia. Salgagon mukaan enkoodauksien käyttö perustuu siihen, että eri kerrokset käsittelevät enkoodauksia eri tavalla. Esimerkiksi Unicodessa merkkiä "a"\space vastaa merkkijono "\%u0061".\space Voi olla että palomuuri tulkitsee merkkijonon "\%u0061"\space tavallisena merkkijonona, kun taas tietokanta tulkitsee sen kirjaimena "a". Näin ollen esimerkiksi avainsana SELECT voidaan piilottaa unicoden avulla merkkijonoon "\%u0053\%u0045\%u004c\%u0045\%u0043\%u0054".
 	
-	\subsubsection{SQL-Injektion alatyypit}
-	Artikkelin "SQL-Injection is still alive"\space  mukaan SQL-injektioita on kolmea eri päätyyppiä\cite{still-alive}.
+	\subsection{SQL-Injektioiden luokittelu}
+	SQL-Injektioita luokitallaan myös sen mukaan, miten hyökkääjä saa haluamansa tiedon sovellukselta. Artikkelin "SQL-Injection is still alive"\space  mukaan SQL-injektioita on kolmea eri päätyyppiä\cite{still-alive}.
 	
 	\begin{description}
 		\item[Inband injektio] \hfill \\
-		Kun SQL-injektion tuloste saadaan samaa reittiä kun se on syötetty, on kyseessä inband injektio. Esimerkiksi jos sovelluksessa on mahdollista hakea lista tuotteista jotka ovat maasta jonka käyttäjä antaa kyselyssä.
+		Kun SQL-injektion tuloste saadaan samaa reittiä kun se on syötetty, on kyseessä inband injektio. Esimerkiksi jos sovelluksessa on mahdollista hakea lista tuotteista jotka ovat käyttäjän haluamasta maasta. Injektion jälkeen sovellus palauttaisi esimerkiksi kaikki tietokannasta löytyvät tuotteet.
 		
 		\item[Out-of-band injektio] \hfill \\
 		Kun SQL-Injektion tuloste saadaan eri reittiä kun se on syötetty, on kyseesä out-of-band injektio. Web-sovellus saattaa esimerkiksi tallettaa tietokantaansa millä selaimilla sitä on käytetty. Selaintiedot haetaan HTTP pyynnön "User-Agent" kentästä. Hyökkääjä voi asettaa SQL-injektion User-Agent kenttäänsä. Todennäköisesti hyökkääjä ei näe kyselyn tulosta kyselyn palauttamalla sivulla. Hyökkääjän voi ohjata tulokset itselleen esimerkiksi suorituttamalla injektiossa haun:
@@ -227,14 +248,14 @@
 	
 	\section {Tietoturvallisen ohjelman toteutus}
 		\subsection{Parametrisoidut kyselyt}
-		Parametrisoiduissa kyselyssä luodaan SQL-kyselystä pohja, johon lisätään paikanpitäjät \textit{(engl. placeholder)}. Parametrisoitu kysely annetaan tietokannalle. Tietokanta kääntää ja optimoi kyselyn pohjan vain kerran. Tietokanta ei kuitenkaan vielä suorita varsinaista kyselyä, koska varsinaiset arvot puuttuvat. Tällainen toimintatapa parantaa tietoturvan lisäksi myös suorituskykyä.
+		Parametrisoiduissa kyselyssä luodaan SQL-kyselystä pohja, johon lisätään paikanpitäjät \textit{(engl. placeholder)}. Parametrisoitu kysely annetaan tietokannalle. Tietokanta kääntää ja optimoi kyselyn pohjan vain kerran. Tietokanta ei kuitenkaan vielä suorita varsinaista kyselyä, koska varsinaiset arvot puuttuvat. Tällainen toimintatapa parantaa tietoturvan lisäksi myös suorituskykyä. Kun käyttäjä antaan syötteen, paikanpitäjät korvataan syötteen.
 		
 		Parametrisoitujen kyselyiden avulla erotetaan kysely ja siihen liittyvä data. Kun kysely on valmiiksi käännettynä, varsinaisia arvoja ei enää käännetä SQL:läksi. Tästä syystä on mahdotonta, että hyökkääjä voisi suorittaa omia SQL-käskyään syötteensä avulla. Jos hyökkääjä esimerkiksi asettaa käyttäjänimekseen "'OR 1=1'", tietokannasta haetaan käyttäjää jonka käyttäjänimi on "'OR1=1".
 		
 		Parametrisoidut kyselyt ovat tuettuina lähes kaikissa yleisimmissä ohjelmointikielissä.
 		
 		\subsection{Korvaaminen ja validointi}
-		Korvaaminen \textit{engl. escaping} on toimenpide jossa käyttäjän syötteestä parsitaan vaaralliset merkit pois. Esimerkiksi ' merkit voidaan muuttaa \textbackslash merkeiksi. Syötteen korvaamisissa on kuitenkin tietokantakohtaisia eroja. Siksi kullekkin tietokannalle on olemassa omat korvaamisfunktionsa. Esimerkiksi PHP:ssa käytetään mySQL:lää varten "my{\_}sql{\_}real{\_}ecape()"\space funktiota.
+		Korvaaminen \textit{engl. escaping} on toimenpide jossa käyttäjän syötteestä parsitaan vaaralliset merkit pois. Esimerkiksi ' merkit voidaan muuttaa \textbackslash merkeiksi. Syötteen korvaamisissa on kuitenkin tietokantakohtaisia eroja. Siksi kullekkin tietokannalle on olemassa omat korvaamisfunktionsa. Esimerkiksi PHP:ssa käytetään mySQL:lää varten "my{\_}sql{\_}real{\_}ecape()"\space funktiota. Korvaamisen heikkona puolena on se, että toisinaan kantaan saatetaan haluta tallettaa myös erikoismerkkejä.
 		
 		\subsection{Datan validointi}
 		Datan validointi ei takaa suojaa SQL-injektiolta, mutta se tekee hyökkäyksestä vaikeampaa. Esimerkiksi syötteet jotka sisältää puolilainausmerkit voidaan estää kokonaan. Toisaalta tämä ei ole aina toivottua toimintaa, esim. nimi O'Brian ei tällöin toimisi \cite{validointi}. 
@@ -246,7 +267,7 @@
 		\subsection{Hienojakoinen pääsynhallinta tietokantaan}
 		Tämä kappale keskittyy Roichmanin ja Gudesin artikkeliin "Fine-grained Access Control to Web Databases" \cite{access}.\space Artikkelin mukaan ennen web-sovellusten yleistymistä sovelluksia ajettiin käyttäjän omalla tietokoneella. Tyypillisellä sovelluksella oli kiinteä määrä  käyttäjiä. Tällaisessa sovelluskessa sovelluskerros kommunikoi suoraa tietokannan kanssa. Tämän seurauksena tietokanta tietää mikä käyttäjä sitä milloinkin käyttää. Täten on helppoa rajata käyttäjien oikeuksia.
 		
-		Sen sijaan web-sovelluksissa on tyypillisesti kolme kerrosta. Käyttöliittymänä toimii käyttäjän selain, joka kommunikoi web-sovelluksen palvelimen kanssa. Palvelin välittää käyttäjän käskyt tietokannalle. Tietokannan näkökulmasta komennot antaa web-sovellus, eikä komennon käyttöliittymästä lähettänyt käyttäjä. Täten tietokanta suorittaa sokeasti kaikki saamansa komennot, ellei web-sovellukseen tietokantakäyttäjän oikeuksia ole erikseen rajattu.
+		Sen sijaan artikkelin mukaan web-sovelluksissa on tyypillisesti kolme kerrosta. Käyttöliittymänä toimii käyttäjän selain, joka kommunikoi web-sovelluksen palvelimen kanssa. Palvelin välittää käyttäjän käskyt tietokannalle. Tietokannan näkökulmasta komennot antaa web-sovellus, eikä komennon käyttöliittymästä lähettänyt käyttäjä. Täten tietokanta suorittaa sokeasti kaikki saamansa komennot, ellei web-sovellukseen tietokantakäyttäjän oikeuksia ole erikseen rajattu.
 		
 		Aiemmin esitellyissä menetelmissä on keskitytty ratkaisemaan ongelmaa sovelluskerroksella. Roichmanin ja Gudesin lähestymistavassa keskitytään ratkaisemaan ongelmaa tietokantatasolla parametrisointi metodin \textit{(engl. parameter method)}) avulla. Tekniikka perustuu parametrisoituihin näkymiin \textit{(engl. parametrized views)}. Parametrisoidun näkymän avulla voi suodattaa tallenteita ilman, että tarvitsee tehdä uutta näkymään jokaista eri parametria varten.
 		
@@ -295,7 +316,7 @@
 	
 	\subsection{AMNESIA}
 	
-	Halfonding ja Orson artikkelissa \cite{amnesia} esitellään SQL-injektioiden torjumiseksi AMNESIA tekniikkaa. AMNESIA on lyhenne sanoille "Analysis and Monitoring for NEutralizing SQL-Injection Attacks". Tekniikka koostuu neljästä osasta.
+
 	\begin{enumerate}
 		\item{Etsi suorituspaikat}
 		
@@ -393,6 +414,8 @@
 	
 	SQL-injektio ei kuitenkaan ole ainut tietoturvariski.
 	
+	\pagebreak
+	
 	
 	
 	
@@ -406,7 +429,8 @@
 	%
 	% instead.
 	
-	\bibliographystyle{babplain-lf}
+	\bibliographystyle{babalpha-lf}
+	
 	\bibliography{references-fi}
 	
 	
