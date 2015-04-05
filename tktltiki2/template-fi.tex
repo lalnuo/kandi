@@ -35,6 +35,7 @@
 \usepackage{xcolor}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{sidecap}
 \lstset{
 	keywordstyle=\color{black}\bfseries, % style for keywords
 	numbers=none, % where to put the line-numbers
@@ -242,22 +243,45 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 	\subsection{Käyttäjän syötteen käsittely}
 		SQL-Injektiolta välttymiseksi käyttäjän syötteet on tarkastettava. Vaaralliseksi epäilty syöte voidaan käsitellä vaarattomaksi, tai jättää suorittamatta kokonaan. Tässä kappaleessa esitellään kolme erilaista tapaa käsitellä käyttäjän syötettä: datan validointi, korvaaminen ja parametrisoidut kyselyt.
 		
+		 \subsubsection{Validointi}
 		 Validointi voidaan toteuttaa joko musta- tai valkolistan avulla tai vertaamalla syötettä erilaisiin säännöllisiin lauseisiin. Valkolistan tapauksessa kaikki sallitut syötteet on kirjattuna valmiiksi. Tällainen lähestymistapa on kuitenkin usein mahdoton, koska valkolista kasvaisi liian suureksi. Mustalistalla voidaan pyrkiä listaamaan kaikki kielletyt syötteet tai merkit, mutta mustalista saattaa on kierrettävissä obfuskoinnin avulla \cite{encoding}. 
 		
 		Käyttäjän syötettä voidaan myös verrata säännölliseen lausekkeeseen, esimerkiksi puhelinnumeokenttä voidaan rajoittaa hyväksymään pelkästään numeroita. Syöte voidaan myös tarkastaa SQL-avainsanojen tai erikoismerkkien varalta. Tällainen lähestymistapa voi kuitenkin rajoittaa myös päteviä syötteitä. Esimerkiksi käyttäjänimi "O'Brian" olisi estetty "'" merkin vuoksi \cite{validointi}.
 		
-		Datan validoinnin sijaan voidaan käyttää korvaamista (\textit{engl. escaping}). Korvaamisessa vaarallisia syötteitä ei hylätä. Hylkäämisen sijaan kaikille syötteille suoritetaan korvausoperaatio. Korvausoperaatiossa haitalliset erikoismerkit, kuten ' korvataan joillakin vaarattomilla merkeillä esimerkiksi \. Vaarallisissa merkeissä on kuitenkin tietokantakohtaisia eroja. Tästä syystä ohjelmoijan tulee käyttää tietokantakohtaista korvausfunktiota. Tyypillisesti korvausfunktiota ei ole tarpeellista toteuttaa itse, sillä ohjelmointikielet tarjoavat niihin usein valmiita toteutuksia. Esimerkiksi PHP:ssa on mySQL tietokantaa varten luotu "my{\_}sql{\_}real{\_}ecape()"\space funktio. Korvaaminen ei kuitenkaan ole aina toivottua. Esimerkiksi nimimerkki "O'Brian"\space korvautuu "O\textbackslash Brian:iksi", joka ei todennäköisesti ole toivottavaa.
 		
-		Parametrisoidut kyselyiden avulla voidaan tallentaa käyttäjän antama syöte sellaisenaan tietokantaan, ilman että se muuttaa valmiiksi luodun kyselyn syntaksia. Tällöin "O'Brian" tallentuu "O'Brian":ina juuri kuten pitääkin. Parametrisoidussa kyselyssä luodaan SQL-kyselyistä pohjia, joihin lisätään paikanpitäjät (\textit{engl. placeholder}). Parametrisoitu kysely annetaan tietokannalle. Tietokanta kääntää ja optimoi kyselyn pohjan vain kerran. Tällainen toimintatapa parantaa suorituskykyä. Tietokanta ei kuitenkaan suorita varsinaista kyselyä heti, koska siitä puuttuu haettavat arvot. Kun käyttäjä antaa syötteenä haluamansa arvot, paikanpitäjät korvataan arvoilla. Käyttäjän antamia arvoja ei enää tulkata SQL:lläksi, vaan niitä käsitellään sellaisinaan. Tällöin ei ole mahdollista että käyttäjän syöte rikkoisi kyselyä. Esimerkiksi jos käyttäjä antaa käyttäjänimekseen "'; OR 1=1", niin tietokannasta haetaan käyttäjää, jonka käyttäjänimi on "OR 1=1".
-		Parametrisoidut kyselyt ovat tuettuina lähes kaikissa yleisimmissä ohjelmointikielissä \cite{java}.
+		\subsubsection{Korvaaminen}
+		Datan validoinnin sijaan voidaan käyttää korvaamista (\textit{engl. escaping}). Korvaamisessa vaarallisia syötteitä ei hylätä. Hylkäämisen sijaan kaikille syötteille suoritetaan korvausoperaatio. Korvausoperaatiossa haitalliset erikoismerkit, kuten ' korvataan joillakin vaarattomilla merkeillä kuten \. Vaarallisissa merkeissä on kuitenkin tietokantakohtaisia eroja. Tästä syystä ohjelmoijan tulee käyttää tietokantakohtaista korvausfunktiota. Tyypillisesti korvausfunktiota ei ole tarpeellista toteuttaa itse, sillä ohjelmointikielet tarjoavat niihin usein valmiita toteutuksia. Esimerkiksi PHP:ssa on mySQL tietokantaa varten luotu "my{\_}sql{\_}real{\_}ecape\_string()"\space funktio. 
+		
+		Sadeghanin ja Zamanin artikkelin "SQL injection vulnerability general patch using header sanitization"\space\cite{prepared} mukaan korvaamista voidaan käyttää myös HTTP-pakettien käsittelyyn. Web-sovellukset saavat tyypillisesti viestinsä HTTP-protokollaa käyttäen. Saapuvat HTTP-paketit voidaan käsitellä korvausfunktion avulla ennen kun ne annetaan itse sovellukselle käsiteltäväksi. Tällä tavoin vanhasta sovelluksesta voidaan yrittää tehdä tietoturvallinen ilman, että sen lähdekoodia tarvitsee muokata. Artikkelin mukaan esimerkiksi PHP:n tapauksessa metodin käyttöönotto vaatii vain yhden kirjaston käyttöönottoa. Tämän ansiosta metodin käyttöönotto on todennäköisesti nopeampaa, kuin koko sovelluksen refaktorointi SQL-injektioiden varalta. Toisaalta erililsen HTTP-pakettien käsittelijän lisääminen voi huonontaa ohjelman suorituskykyä.
+		
+		Korvaaminen ei kuitenkaan ole aina toivottua. Esimerkiksi nimimerkki "O'Brian"\space korvautuu "O\textbackslash Brian:iksi", joka ei todennäköisesti ole toivottavaa. 
+	
+				\begin{figure}[h!]
+					\caption{Syöte voidaan korvata erillisessä HTTP-paketti käsitelijässä jo ennen kuin paketti annetaan sovellukselle..}
+					
+					
+					\includegraphics[scale=0.6]{http}
+				\end{figure}
+		
+		\subsubsection{Parametrisoidut kyselyt}
+		Parametrisoidut kyselyt esitellään artikkelissa "SQL injection vulnerability general patch using header sanitization"\space \cite{prepared}. Niiden avulla voidaan tallentaa käyttäjän antama syöte sellaisenaan tietokantaan, ilman että se muuttaa valmiiksi luodun kyselyn syntaksia. Tällöin "O'Brian" tallentuu "O'Brian":ina juuri kuten pitääkin. Parametrisoidussa kyselyssä luodaan SQL-kyselyistä pohjia, joihin lisätään paikanpitäjät (\textit{engl. placeholder}). Parametrisoitu kysely annetaan tietokannalle. Tietokanta kääntää ja optimoi kyselyn pohjan vain kerran. Tällainen toimintatapa parantaa suorituskykyä. Tietokanta ei kuitenkaan suorita varsinaista kyselyä heti, koska siitä puuttuu haettavat arvot. Kun käyttäjä antaa syötteenä haluamansa arvot, paikanpitäjät korvataan arvoilla. Käyttäjän antamia arvoja ei enää tulkata SQL:lläksi, vaan niitä käsitellään sellaisinaan. Tällöin ei ole mahdollista että käyttäjän syöte rikkoisi kyselyä. Esimerkiksi jos käyttäjä antaa käyttäjänimekseen "'; OR 1=1", niin tietokannasta haetaan käyttäjää, jonka käyttäjänimi on "OR 1=1".
+		Parametrisoidut kyselyt ovat tuettuina lähes kaikissa yleisimmissä ohjelmointikielissä \cite{java}. Oikein käytettynä parametrisoidut kyselyt suojaavat sovelluksen täysin SQL-injektioilta \cite{prepared}.
 		
 		\subsection{Koodikatselmointi}
 		Antunesin ja kumppaneiden tekemässä vertailussa\cite{vertailu} vertailtiin staattisen koodianalyysin ja penetraatiotestaamisen eroja. Kumpikaan testaustapa ei löytänyt yli 51\% sovelluksen tietoturva-aukoista. Tällaisten aukkojen huomaaminen on kuitenkin mahdollista, kun ohjelman lähdekoodia katselmoi useammat henkilöt.
 		
 		\subsection{Hienojakoinen pääsynhallinta tietokantaan}
 		Tämä kappale keskittyy Roichmanin ja Gudesin artikkeliin "Fine-grained Access Control to Web Databases" \cite{access}.\space Artikkelin mukaan ennen web-sovellusten yleistymistä sovelluksia ajettiin käyttäjän omalla tietokoneella. Tyypillisellä sovelluksella oli kiinteä määrä  käyttäjiä. Tällaisessa sovelluskessa sovelluskerros kommunikoi suoraa tietokannan kanssa. Tämän seurauksena tietokanta tietää mikä käyttäjä sitä milloinkin käyttää. Täten on helppoa rajata käyttäjien oikeuksia.
+						 \begin{figure}[h]
+						 	\centering
+						 	\includegraphics[scale=0.55]{kandi2}
+						 \end{figure}
+				 
+				 
+		 Nykyään web-sovelluksissa on tyypillisesti kolme kerrosta \cite{access}\cite{3tier}. Käyttöliittymänä toimii käyttäjän selain, joka kommunikoi web-sovelluksen palvelimen kanssa. Palvelin välittää käyttäjän käskyt tietokannalle. Tietokannan näkökulmasta komennot antaa web-sovellus, eikä komennon käyttöliittymästä lähettänyt käyttäjä. Täten tietokanta suorittaa sokeasti kaikki saamansa komennot, ellei web-sovellukseen tietokantakäyttäjän oikeuksia ole erikseen rajattu.
 		
-		Artikkelin mukaan nykyään web-sovelluksissa on tyypillisesti kolme kerrosta. Käyttöliittymänä toimii käyttäjän selain, joka kommunikoi web-sovelluksen palvelimen kanssa. Palvelin välittää käyttäjän käskyt tietokannalle. Tietokannan näkökulmasta komennot antaa web-sovellus, eikä komennon käyttöliittymästä lähettänyt käyttäjä. Täten tietokanta suorittaa sokeasti kaikki saamansa komennot, ellei web-sovellukseen tietokantakäyttäjän oikeuksia ole erikseen rajattu.
+
+		 
 		
 		Aiemmin esitellyissä menetelmissä on keskitytty ratkaisemaan ongelmaa sovelluskerroksella. Roichmanin ja Gudesin lähestymistavassa keskitytään ratkaisemaan ongelmaa tietokantatasolla parametrisointi metodin \textit{(engl. parameter method)}) avulla. Tekniikka perustuu parametrisoituihin näkymiin \textit{(engl. parametrized views)}. Parametrisoidun näkymän avulla voi suodattaa tallenteita ilman, että tarvitsee tehdä uutta näkymään jokaista eri parametria varten.
 		
@@ -345,7 +369,11 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 		\end{figure}
 		
 	\subsection{SQLRand}
-	SQLRand menetelmä esitellään Boydin ja Keromytisin artikkelissa "SQLrand: Preventing SQL Injection Attacks"\cite{sqlrand}. SQLRandissa on ideana, että normaalit SQL avainsanat kuten "SELECT"\space korvataan satunnaisilla avainsanoilla. Satunnaistaminen tapahtuu lisäämällä alkuperäisen avainsanan perään satunnainen numero. Täten hyökkääjä ei pysty satunnaista numeroa arvaamatta toteuttamaan SQL-injektiota, koska normaalien SQL avainsanojen käyttö aiheuttaa virheilmoituksen. Sovellus tietää virheilmoituksesta että kyseessä oli SQL-injektio.
+	Boyd ja Keromytis esittelevät SQLRand menetelmän SQL-injektiota vastaan artikkelissaan "SQLRand: Preventing SQL Injection Attacks"\space \cite{sqlrand}. SQLRandissa on ideana lisätä jokaiseen SQL-avainsanaan jokin satunnainen numero. Mikäli hyökkääjä yrittäisi suorittaa SQL-injektion tavallisilla SQL-avainsanoilla, se epäonnistuihi, koska sovellus ei tunnistaisi sitä SQL:läksi.
+	
+	Tavallinen tietokanta ei ymmärrä satunnaistettuja SQL-avainsanoja. Artikkelissa tähän ongelmaan oli luotu kaksi eri ratkaisua. Ensimmäinen on muokata tietokannan SQL-tulkkia siten, että se ymmärtää muokattuja SQL-avainsanoja. Tämä voi kuitenkin olla vaikeaa toteuttaa, sekä se saattaa sotkea muiden sovellusten toimintaa, jotka käyttävät samaa tietokantapalvelinta. Toinen ratkaisu on luoda erillinen tulkkisovellus tietokantapalvelimen ja web-sovelluksen välille.
+	
+	SQLRandia on kritisoitu sen monimutkaisuudesta \cite{prepared}. Kritisoijat pitävät SQLRandin toteuttamista olemassa olevaan sovellukseen aikaavievänä. Sen katsotaan myös hankaloittavan sovelluksen käyttöönottoa.
 	\section{Penetraatiotestaus}
 	
 	 Vaikka sovellusta ohjelmoitaisiin hyvien ohjelmointikäytänteiden mukaisesti, siihen voi silti jäädä tietoturva-aukkoja. Tämän takia sovellusta on jatkuvasti tietoturvatestattava. 
@@ -353,6 +381,8 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 	 Penetraatiotestauksessa yritetään etsiä sovelluksesta tietoturva-aukkoja. Kun penetraatiotestaus on automatisoitua, ohjelmoijan ei tarvitse suorittaa samoja testausruutineja jokaisen muutoksen jälkeen. Penetraatiotestaus ei kuitenkaan ole virheetöntä. Artikkelissa "Using web security scanners to detect vulnerabilities in web services" \cite{detection} kerrotaan, että penetraatiotestaus voi aiheuttaa turhia hälyytyksiä, tai olla hälyyttämättä kun pitäisi hälyyttää. Artikkelin mukaan jopa yli 30\% havaituista virheistä osoittautuivat virheellisiksi. Tämän takia penetraatiotestauksen tulee olla vain yksi testaustyökaluista, eikä siihen voida sokeasti luottaa.
 	 
 	Musta laatikko -testauksessa testataan sovellusta erilaisia syötteitä vastaan. Tällaiseen testaamiseen ei vaadita pääsyä itse koodiin \cite{testing2}. Tämä on hyödyllistä esimerkiksi sellaisissa tapauksissa, kun osa ohjelman komponenteista on kolmannen osapuolen koodia, eikä siihen päästä käsiksi. Mustalaatikko testauksessa on ongelmana se, että tulos perustuu sovelluksen tulosteesta tehtyyn analyysiin, eikä esimerkiksi tietokannan todelliseen tilaan. Tästä syystä kaikkia tietoturva-aukkoja ei välttämättä löydetä, tai jotain turvallista kohtaa koodista voidaan luulla tietoturva-aukoksi. Mustalaatikkotestaukseen löytyy useita valmiita työkaluja, kuten "Acunetix Web Vulnerability Scanner"\space ja sqlmap.
+	
+	Valkolaatikko testauksessa testaajalla on pääsy ohjelman lähdekoodiin. Valkolaatikko testaustyökaluihin kuuluu esimerkiksi staattiset lähdekoodin analysointi työkalut. Tällaisilla työkaluilla voidaan huomata mahdollisia tietoturva-aukkoja jo ennen kun ohjelmaa on ajettu ensimmäistäkään kertaa \cite{valkolaatikko}. 
 	
 	\subsection{Penetraatiotestauksen toiminta}
 	 Haixia edottaa artikkelissaan "A database security testing scheme of web application" \cite{testing} seuraavanlaista testausmallia.
@@ -392,10 +422,9 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 	
 	Toimivaan syötteeseen voidaa lisätä yksi tai useampi mutaatio-operaatio. Artikkelin mukaan useasti yksittäinen operaatio huomataan, mutta yhdistelmät saattavat silti jäädä huomaamatta. Mutaatioiden tekeminen aloitetaan toimivasta syötteestä, koska sillä vältetään se, että syöte hylättäisiin välittömästi. Lisäksi toimivat syötteet täyttävät todennäköisemmin syötevalidoinnit. 
 	
-	
-	
 	\section {Yhteenveto}
 	(pahasti kesken)
+	- osalla saadaan vanhoista ohjelmista toimivia
 	
 	
 	SQL-Injektioilta suojautuminen voidaan jakaa ohjelmointikäytänteisiin, ajonaikaiseen monitorointiin ja testaukseen. Periaatteessa jo hyvät ohjelmointikäytänteet riittävät sovelluksen suojautumiseen SQL-injektiolta. Ei kuitenkaan voida olla varmoja muistetaanko hyviä ohjelmointikäytänteitä aina noudattaa. Tästä syystä on sovellusta tulee penetraatiotestata.
