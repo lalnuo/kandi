@@ -199,7 +199,7 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 				sql = "SELECT * FROM tuotteet
 				WHERE nimi ='" + params[:tuotenimi] AND tuotekoodi ='"params[:tuotekoodi]"'
 			\end{lstlisting}
-			Hyökkääjä voi kirjoittaa tuotenimeksi "Haluttu tuote'; --". Hyökkäyksen onnistuessa loput kyselystä muuttuu kommentoiduksi. Tällöin tuotteen tiedot palautetaan, vaikka hyökkääjä ei tietäisi tuotekoodia.
+			Hyökkääjä voi kirjoittaa tuotenimeksi "Haluttu tuote'; --". Hyökkäyksen onnistuessa loput kyselystä muuttuu kommentoiduksi. Tällöin tuotteen tiedot palautetaan, vaikka hyökkääjä ei tietäisi tuotekoodia. Kaksi viivaa on kommenttimerkki esimerkiksi Transact-SQL:llässä ja Micorosft SQL serverissä \cite{kommentti}.
 			
 		\item[Union kysely] \hfill
 		
@@ -252,12 +252,12 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 		\subsubsection{Korvaaminen}
 		Datan validoinnin sijaan voidaan käyttää korvaamista (\textit{engl. escaping}). Korvaamisessa vaarallisia syötteitä ei hylätä. Hylkäämisen sijaan kaikille syötteille suoritetaan korvausoperaatio. Korvausoperaatiossa haitalliset erikoismerkit, kuten ' korvataan joillakin vaarattomilla merkeillä kuten \. Vaarallisissa merkeissä on kuitenkin tietokantakohtaisia eroja. Tästä syystä ohjelmoijan tulee käyttää tietokantakohtaista korvausfunktiota. Tyypillisesti korvausfunktiota ei ole tarpeellista toteuttaa itse, sillä ohjelmointikielet tarjoavat niihin usein valmiita toteutuksia. Esimerkiksi PHP:ssa on mySQL tietokantaa varten luotu "my{\_}sql{\_}real{\_}ecape\_string()"\space funktio. 
 		
-		Sadeghanin ja Zamanin artikkelin "SQL injection vulnerability general patch using header sanitization"\space\cite{prepared} mukaan korvaamista voidaan käyttää myös HTTP-pakettien käsittelyyn. Web-sovellukset saavat tyypillisesti viestinsä HTTP-protokollaa käyttäen. Saapuvat HTTP-paketit voidaan käsitellä korvausfunktion avulla ennen kun ne annetaan itse sovellukselle käsiteltäväksi. Tällä tavoin vanhasta sovelluksesta voidaan yrittää tehdä tietoturvallinen ilman, että sen lähdekoodia tarvitsee muokata. Artikkelin mukaan esimerkiksi PHP:n tapauksessa metodin käyttöönotto vaatii vain yhden kirjaston käyttöönottoa. Tämän ansiosta metodin käyttöönotto on todennäköisesti nopeampaa, kuin koko sovelluksen refaktorointi SQL-injektioiden varalta. Toisaalta erililsen HTTP-pakettien käsittelijän lisääminen voi huonontaa ohjelman suorituskykyä.
+		Sadeghanin ja Zamanin artikkelin "SQL injection vulnerability general patch using header sanitization"\space\cite{prepared} mukaan korvaamista voidaan käyttää myös HTTP-pakettien käsittelyyn. Web-sovellukset saavat tyypillisesti viestinsä HTTP-protokollaa käyttäen. Saapuvat HTTP-paketit voidaan käsitellä korvausfunktion avulla ennen kun ne annetaan itse sovellukselle käsiteltäväksi. Tällä tavoin vanhasta sovelluksesta voidaan yrittää tehdä tietoturvallinen ilman, että sen lähdekoodia tarvitsee muokata. Artikkelin mukaan esimerkiksi PHP:n tapauksessa metodin käyttöönotto vaatii vain yhden kirjaston käyttöönottoa. Tämän ansiosta metodin käyttöönotto on todennäköisesti nopeampaa, kuin koko sovelluksen refaktorointi SQL-injektioiden varalta. Toisaalta erililsen HTTP-pakettienkäsittelijän lisääminen voi huonontaa ohjelman suorituskykyä.
 		
 		Korvaaminen ei kuitenkaan ole aina toivottua. Esimerkiksi nimimerkki "O'Brian"\space korvautuu "O\textbackslash Brian:iksi", joka ei todennäköisesti ole toivottavaa. 
 	
 				\begin{figure}[h!]
-					\caption{Syöte voidaan korvata erillisessä HTTP-paketti käsitelijässä jo ennen kuin paketti annetaan sovellukselle..}
+					\caption{Syöte voidaan korvata erillisessä HTTP-pakettien käsitelijässä jo ennen kuin paketti annetaan sovellukselle. \cite{prepared}}
 					
 					
 					\includegraphics[scale=0.6]{http}
@@ -274,6 +274,7 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 		Tämä kappale keskittyy Roichmanin ja Gudesin artikkeliin "Fine-grained Access Control to Web Databases" \cite{access}.\space Artikkelin mukaan ennen web-sovellusten yleistymistä sovelluksia ajettiin käyttäjän omalla tietokoneella. Tyypillisellä sovelluksella oli kiinteä määrä  käyttäjiä. Tällaisessa sovelluskessa sovelluskerros kommunikoi suoraa tietokannan kanssa. Tämän seurauksena tietokanta tietää mikä käyttäjä sitä milloinkin käyttää. Täten on helppoa rajata käyttäjien oikeuksia.
 						 \begin{figure}[h]
 						 	\centering
+						 	\caption{Web-sovelluksen kolme kerrosta.}
 						 	\includegraphics[scale=0.55]{kandi2}
 						 \end{figure}
 				 
@@ -328,13 +329,15 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 	SQL-Injektioida voidaan yrittää havaita ja estää ajonaikana. Tätä varten on luotu useita työkaluja, kuten SQLCheck, SQLProb ja Candid. \cite{preventions}. Ajonaikaiseen SQL-injektioiden estämiseen on kehitetty monenlaisia tapoja. Tässä kappaleessa perehdytään tarkemmin AMNESIA ja SQLrand menetelmiin.
 	
 	\subsection{AMNESIA}
+	Tässä kappaleessa esitellään artikkelissa "Preventing SQL Injection Attacks Using AMNESIA"\space\cite{amnesia} esiteltyä AMNESIA tekniikkaa. AMNESIA:n avulla pystytään estämään SQL-injektioida ajonaikaisesti. Artikkelin mukaan AMNESIA ottaa syötteenään sovelluksen lähdekoodin ja palauttaa siitä version, joka on suojattu SQL-injektiolta.
 	
+	 AMNESIA:ssa on ideana etsiä sovelluksen lähdekoodista ne paikat, joissa SQL-kyselyitä suoritetaan. Jokaista SQL-kyselyn suorituspaikkaa kohden luodaan ääreellinen automaatti. Automaatti hyväksyy vain ne syötteet, joita se ei tunnista SQL-injektoiksi. Ajon aikana jokaista suoritettavaa SQL-kyselyä verrataan suorituspaikkaa vastaavaan äärelliseen automaattiin. Kysely suoritetaan vain, mikäli automaatti hyväksyy syöytteen. AMNESIA tekniikka koostuu neljästä osasta:
 
 	\begin{enumerate}
 		\item{Etsi suorituspaikat}
 		
 		Ensin ohjelman koodi skannataan. Skannauksessa etsitään koodista ne paikat, joissa tietokantakyselyjä suoritetaan. Näihin paikkoihin viitataan tässä tutkielmassa sanalla "suorituspaikka" \textit{(engl. hotspot)}. Esimerkiksi Javan tapauksessa etsitään koodista paikat joissa kutsutaan "java.sql.Statement.execute(String)" \space metodia.
-		\item{Rakenna SQL-kyselymallit}
+		\item{SQL-kyselymallien rakentaminen}
 		
 		Seuraavaksi rakennetaan jokaiselle edellisessä kohdassa löydetylle suorituspaikalle oma mallinsa. Tämä onnistuu siten, että AMNESIA simuloi sovelluksen toimintaa Java String Analysis (JSA) kirjaston avulla. JSA Luo analyysin tuloksena epädetermistisen ääreellisen automaatin (NDFA), joka tunnistaa kaikki mahdolliset merkkijonot, jotka kysely voi saada arvokseen. Esimerkiksi allaoleva koodipätkä voi saada arvokseen joko: 
 		"SELECT info FROM kayttajat WHERE kayttajanimi = $\beta$"\space tai "SELECT info FROM kayttajat WHERE kayttajanimi='vieras'". Käyttäjän syötettä merkataan symbolilla $\beta$.
@@ -378,11 +381,11 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 	
 	 Vaikka sovellusta ohjelmoitaisiin hyvien ohjelmointikäytänteiden mukaisesti, siihen voi silti jäädä tietoturva-aukkoja. Tämän takia sovellusta on jatkuvasti tietoturvatestattava. 
 	 
-	 Penetraatiotestauksessa yritetään etsiä sovelluksesta tietoturva-aukkoja. Kun penetraatiotestaus on automatisoitua, ohjelmoijan ei tarvitse suorittaa samoja testausruutineja jokaisen muutoksen jälkeen. Penetraatiotestaus ei kuitenkaan ole virheetöntä. Artikkelissa "Using web security scanners to detect vulnerabilities in web services" \cite{detection} kerrotaan, että penetraatiotestaus voi aiheuttaa turhia hälyytyksiä, tai olla hälyyttämättä kun pitäisi hälyyttää. Artikkelin mukaan jopa yli 30\% havaituista virheistä osoittautuivat virheellisiksi. Tämän takia penetraatiotestauksen tulee olla vain yksi testaustyökaluista, eikä siihen voida sokeasti luottaa.
+	 Penetraatiotestauksessa yritetään etsiä sovelluksesta tietoturva-aukkoja. Kun penetraatiotestaus on automatisoitua, ohjelmoijan ei tarvitse suorittaa samoja testausruutineja käsin jokaisen muutoksen jälkeen. Penetraatiotestaus ei kuitenkaan ole virheetöntä. Artikkelissa "Using web security scanners to detect vulnerabilities in web services" \cite{detection} kerrotaan, että penetraatiotestaus voi aiheuttaa turhia hälyytyksiä, tai olla hälyyttämättä kun pitäisi hälyyttää. Artikkelin mukaan jopa yli 30\% havaituista virheistä osoittautuivat virheellisiksi. Tämän takia penetraatiotestauksen tulee olla vain yksi testaustyökaluista, eikä siihen voida sokeasti luottaa.
 	 
 	Musta laatikko -testauksessa testataan sovellusta erilaisia syötteitä vastaan. Tällaiseen testaamiseen ei vaadita pääsyä itse koodiin \cite{testing2}. Tämä on hyödyllistä esimerkiksi sellaisissa tapauksissa, kun osa ohjelman komponenteista on kolmannen osapuolen koodia, eikä siihen päästä käsiksi. Mustalaatikko testauksessa on ongelmana se, että tulos perustuu sovelluksen tulosteesta tehtyyn analyysiin, eikä esimerkiksi tietokannan todelliseen tilaan. Tästä syystä kaikkia tietoturva-aukkoja ei välttämättä löydetä, tai jotain turvallista kohtaa koodista voidaan luulla tietoturva-aukoksi. Mustalaatikkotestaukseen löytyy useita valmiita työkaluja, kuten "Acunetix Web Vulnerability Scanner"\space ja sqlmap.
 	
-	Valkolaatikko testauksessa testaajalla on pääsy ohjelman lähdekoodiin. Valkolaatikko testaustyökaluihin kuuluu esimerkiksi staattiset lähdekoodin analysointi työkalut. Tällaisilla työkaluilla voidaan huomata mahdollisia tietoturva-aukkoja jo ennen kun ohjelmaa on ajettu ensimmäistäkään kertaa \cite{valkolaatikko}. 
+	Valkolaatikko testauksessa testaajalla on pääsy ohjelman lähdekoodiin. Valkolaatikko testaustyökaluihin kuuluu esimerkiksi staattiset lähdekoodin analysointi työkalut. Tällaisilla työkaluilla voidaan huomata mahdollisia tietoturva-aukkoja jo ennen kun ohjelmaa on ajettu ensimmäistäkään kertaa \cite{valkolaatikko}.
 	
 	\subsection{Penetraatiotestauksen toiminta}
 	 Haixia edottaa artikkelissaan "A database security testing scheme of web application" \cite{testing} seuraavanlaista testausmallia.
@@ -423,20 +426,20 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 	Toimivaan syötteeseen voidaa lisätä yksi tai useampi mutaatio-operaatio. Artikkelin mukaan useasti yksittäinen operaatio huomataan, mutta yhdistelmät saattavat silti jäädä huomaamatta. Mutaatioiden tekeminen aloitetaan toimivasta syötteestä, koska sillä vältetään se, että syöte hylättäisiin välittömästi. Lisäksi toimivat syötteet täyttävät todennäköisemmin syötevalidoinnit. 
 	
 	\section {Yhteenveto}
-	(pahasti kesken)
-	- osalla saadaan vanhoista ohjelmista toimivia
+	SQL-Injektiot ovat olleet web-sovelluksien uhkana jo kauan. Niiltä suojautumiseen on kehitetty monenlaisia toimivia suojautumismenetelmiä. Osa menetelmistä suojaa sovelluksen täydellisesti, mutta osa vain hankaloittaa hyökkäystä. Esimerkiksi parametrisoidut kyselyt suojaavat sovelluksen SQL-injektoilta täydellisesti, kunhan niitä käytetään oikein. Sen sijaan esimerkiksi syötteen validointi ei takaa suojaa SQL-injektioilta, mutta saattaa hankaloittaa hyökkäystä.
+	
+	Osa suojautumismenetelmistä täytyy olla mukana ohjelmointityylissä alusta loppuun asti, sillä niiden lisääminen myöhemmin on työlästä. Esimerkiksi parametrisoidut kyselyt tai Roichmanin ja Gudesin esittelemä hienojakoinen pääsynhallinta tietokantaan vaikuttavat moneen paikkaan koodissa. Osa tekniikoista sen sijaan voidaan ottaa käyttöön vaivattomasti myöhämmässäkin vaiheessa. Esimerkiksi Sadeghanin ja Zamanin esittelemä HTTP-pakettienkäsittelijä, joka voidaan asettaa käsittelemään HTTP-paketteja ennen kun ne annetaan sovellukselle, on helppoa lisätä olemassa olevaan sovellukseen. 
+	
+	Jotkin menetelmistä heikentävät suorituskykyä, tai vaikeuttavat ohjelman käyttöönottoa. Esimerkiksi AMNESIA tekniikkaa käyttäessä sovellus täytyy jokaisen muutoksen jälkeen käyttää AMNESIA työkalun läpi. Toisaalta AMNESIA työkalua käyttäessä SQL-injektioilta suojautumiseen ei tarvitse juurikaan käyttää aikaa ohjelmoinnin aikana, sillä AMNESIA hoitaa suojautumisen automatisoidusti.
+	
+	Jotta suojautumisen onnistumisesta voitaisiin varmistua, sovellusta on testattava. Sovelluksen testaamiseen on luotu erilaisia valmiita työkaluja. Osa työkaluista, kuten staattiset koodin analysointityökalut vaativat pääsyn ohjelman lähdekoodiin. Osa toimii pelkästään ohjelman antaman palautteen perusteella. Tämän hetkisiä työkaluja yhdistää korkeat "false-positive"\space prosentit. Tästä syystä testaustyökalujen antamista tuloksista ei voida päätellä varmaksi, onko sovellus turvallinen vai ei. Koska teustaustyökalujen antamien tulosten oikeellisuudesta ei voida olla varmoja, ohjelmoijan on myös itse ymmärrettävä mikä on SQL-injektio.
+	
+	 Erilaisia suojautumismenetelmiä on niin laaja kirjo, että jää epäselväksi milloin mitäkin suojautumismenetelmää kannattaa käyttää. Tutkielmaa voisi jatkaa selvittämällä milloin mitäkin menetelmää kannattaa käyttää.
 	
 	
-	SQL-Injektioilta suojautuminen voidaan jakaa ohjelmointikäytänteisiin, ajonaikaiseen monitorointiin ja testaukseen. Periaatteessa jo hyvät ohjelmointikäytänteet riittävät sovelluksen suojautumiseen SQL-injektiolta. Ei kuitenkaan voida olla varmoja muistetaanko hyviä ohjelmointikäytänteitä aina noudattaa. Tästä syystä on sovellusta tulee penetraatiotestata.
-	Penetraatiotestauksessa taas on ongelmana sen luotettavuus. Heikon luotettavuuden takia ei voida koskaan olla varmoja onko sovellus täysin turvallinen. Mitä enemmän menetelmiä käyttää, sitä turvallisempi sovellus on. Menetelmien yhdistely on kuitenkin aikaa vievää. Lisäksi osa menetelmistä tekee sovelluksesta, tai sen tuottamisesta hitaampaa ja monimutkaisempaa. On siis vaikeaa sanoa milloin sovellus on tarpeeksi hyvin suojattu.
-	
-	SQL-injektio ei kuitenkaan ole ainut tietoturvariski.
-	
-	\pagebreak
-	
-	
-	
-	
+
+
+
 	% --- References ---
 	%
 	% bibtex is used to generate the bibliography. The babplain style
