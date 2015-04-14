@@ -101,7 +101,7 @@
 \author{Lalli Nuorteva}
 \date{\today}
 \level{Kandidaatintutkielma}
-\abstract{Tämän kandidaatintutkielman päätavoite on selvittää kuinka SQL-injektiolta voidaan suojautua mahdollisimman tehokkaasti. Tutkielma koostuu seuraavista osa-alueista: SQL-injektion esittely, tietoturvallisen ohjelman toteutus, ajonaikainen SQL-injektioiden estäminen ja penetraatiotestaus. 
+\abstract{Tämän kandidaatintutkielman päätavoite on selvittää millaisin keinoin SQL-injektiolta voidaan suojautua. Tutkielma koostuu seuraavista osa-alueista: SQL-injektion esittely, tietoturvallisen ohjelman toteutus, ajonaikainen SQL-injektioiden estäminen ja penetraatiotestaus. 
 
 Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, vaan osaan metodeista perehdytään myös tarkemmin. Tämä auttaa lukijaa ymmärtämään, miten valmiit ratkaisumallit toimivat. Kun ohjelmoija ymmärtää miten hänen valmitsemansa suojautumismetodit toimivat, hän tuntee myös suojauksen heikkoudet ja vahvuudet.}
 
@@ -199,7 +199,7 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 				sql = "SELECT * FROM tuotteet
 				WHERE nimi ='" + params[:tuotenimi] AND tuotekoodi ='"params[:tuotekoodi]"'
 			\end{lstlisting}
-			Hyökkääjä voi kirjoittaa tuotenimeksi "Haluttu tuote'; --". Hyökkäyksen onnistuessa loput kyselystä muuttuu kommentoiduksi. Tällöin tuotteen tiedot palautetaan, vaikka hyökkääjä ei tietäisi tuotekoodia. Kaksi viivaa on kommenttimerkki esimerkiksi Transact-SQL:llässä ja Micorosft SQL serverissä \cite{kommentti}.
+			Hyökkääjä voi kirjoittaa tuotenimeksi "Haluttu tuote'; --". Hyökkäyksen onnistuessa loput kyselystä muuttuu kommentoiduksi. Tällöin tuotteen tiedot palautetaan, vaikka hyökkääjä ei tietäisi tuotekoodia. Kaksi viivaa on kommenttimerkki esimerkiksi Transact-SQL:llässä ja Micorosft SQL serverissä \cite{sqlids}.
 			
 		\item[Union kysely] \hfill
 		
@@ -246,7 +246,7 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 		 \subsubsection{Validointi}
 		 Validointi voidaan toteuttaa joko musta- tai valkolistan avulla tai vertaamalla syötettä erilaisiin säännöllisiin lauseisiin. Valkolistan tapauksessa kaikki sallitut syötteet on kirjattuna valmiiksi. Tällainen lähestymistapa on kuitenkin usein mahdoton, koska valkolista kasvaisi liian suureksi. Mustalistalla voidaan pyrkiä listaamaan kaikki kielletyt syötteet tai merkit, mutta mustalista saattaa on kierrettävissä obfuskoinnin avulla \cite{encoding}. 
 		
-		Käyttäjän syötettä voidaan myös verrata säännölliseen lausekkeeseen, esimerkiksi puhelinnumeokenttä voidaan rajoittaa hyväksymään pelkästään numeroita. Syöte voidaan myös tarkastaa SQL-avainsanojen tai erikoismerkkien varalta. Tällainen lähestymistapa voi kuitenkin rajoittaa myös päteviä syötteitä. Esimerkiksi käyttäjänimi "O'Brian" olisi estetty "'" merkin vuoksi \cite{validointi}.
+		Käyttäjän syötettä voidaan myös verrata säännölliseen lausekkeeseen, esimerkiksi puhelinnumeokenttä voidaan rajoittaa hyväksymään pelkästään numeroita. Syöte voidaan myös tarkastaa SQL-avainsanojen tai erikoismerkkien varalta. Tällainen lähestymistapa voi kuitenkin rajoittaa myös päteviä syötteitä. Esimerkiksi käyttäjänimi "O'Brian" olisi estetty "'" merkin vuoksi \cite{generation}.
 		
 		
 		\subsubsection{Korvaaminen}
@@ -326,7 +326,7 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 		Hyökkääjä saisi vastauksena kaikki omat palkkatietonsa, mutta ei muiden käyttäjien, koska Palkka\_View saa saa parametriksi hyökkääjän oman AS\_KEY:n. Myöskään UNION injektio ei ole tässä tapauksessa mahdollinen, koska hyökkääjä ei tiedä muiden käyttäjien AS\_KEY:tä, joka tarvitaan Palkka\_Viewiin parametriksi.
 	
 	\section{Ajonaikainen SQL-injektoiden estäminen}
-	SQL-Injektioida voidaan yrittää havaita ja estää ajonaikana. Tätä varten on luotu useita työkaluja, kuten SQLCheck, SQLProb ja Candid. \cite{preventions}. Ajonaikaiseen SQL-injektioiden estämiseen on kehitetty monenlaisia tapoja. Tässä kappaleessa perehdytään tarkemmin AMNESIA ja SQLrand menetelmiin.
+	SQL-Injektioida voidaan yrittää havaita ja estää ajonaikana. Tätä varten on luotu useita työkaluja, kuten SQLCheck, SQLProb ja Candid. \cite{preventions}. Ajonaikaiseen SQL-injektioiden estämiseen on kehitetty monenlaisia tapoja. Tässä kappaleessa perehdytään tarkemmin AMNESIA, SQL-IDS ja SQLrand menetelmiin.
 	
 	\subsection{AMNESIA}
 	Tässä kappaleessa esitellään artikkelissa "Preventing SQL Injection Attacks Using AMNESIA"\space\cite{amnesia} esiteltyä AMNESIA tekniikkaa. AMNESIA:n avulla pystytään estämään SQL-injektioida ajonaikaisesti. Artikkelin mukaan AMNESIA ottaa syötteenään sovelluksen lähdekoodin ja palauttaa siitä version, joka on suojattu SQL-injektiolta.
@@ -370,11 +370,45 @@ Tutkielma ei rajoitu pelkästään erilaisten suojautumismetodien luetteluun, va
 		\caption{Vaiheen 2. koodia vastaava automaatti}
 		\includegraphics[scale=0.5]{kandi}
 		\end{figure}
+
+		\begin{figure}[b!]
+			\caption{SQL-IDS lisättynä web-sovellukseen. SQL-IDS menetelmään liittyvät moduulit merkittynä vihreällä. \cite{sqlids}}
+			\includegraphics[scale=0.55]{sqlids}
+		\end{figure}
+		
+	\subsection{SQL-IDS}
+	SQL-IDS (SQL-Injection Detection System) esitellään Kemaliksen ja Theodroksen artikkelissa "SQL-IDS: A Specification-based Approach for SQL-Injection Detection"\space\cite{sqlids}. Se muistuttaa toimintatavaltaan AMNESIA:a, mutta siinä on joitakin eroavaisuuksia. AMNESIA vaatii muutoksia ohjelman lähdekoodiin, kun taas SQL-IDS ei vaadi.
+	
+	Artikkelin mukaan SQL-IDS menetelmässä sovelluksen ja tietokannan väliin asetetaan erillinen tapahtumaseurantamoduuli (\textit{engl. Event Monitoring Module}). Seurantamoduuli käsittelee sovelluksen lähettämiä SQL-kyselyitä antamalla ne oikeellisuuden tarkastusmoduulille (\textit{engl. Validity Check Module}). Mikäli tarkastusmoduuli hyväksyy SQL-kyselyn, se lähetetään tietokannalle. Muulloin kysely havaitaan SQL-injektioksi eikä sitä suoriteta. SQL-Injektioiksi havaituista kyselyistä kirjataan tietoja lokiin.
+	
+	Oikeellisuuden tarkastusmoduuli vastaanottaa SQL-kyselyn merkkijonona. Moduuli tulkkaa merkkijonon SQL:läksi, jonka jälkeen sitä verrataan ennaltamäärättyyn spesifikaatioon. Spesifikaatiot ovat määriteltyinä EBNF kieliopilla. Mikäli annettu lause ei riko kyseisen lauseen spesifikaatiossa määriteltyjä syntaktisia sääntöjä, se hyväksytään, jolloin se etenee seurantamoduulin kautta tietokannalle suoritettavaksi.
+
+	Kemalis ja Theodoros ovat testanneet SQL-IDS menetelmää lähettämällä esimerkkisovellukselle 2450 SQL-kyselyä, joista 420 oli haitallisia. SQL-IDS onnistui tunnistamaan kaikki hyökkäykset. Artikkelin mukaan menetelmä lisää keskimäärin 1ms viiveen per SQL-kysely.
+					
+
 		
 	\subsection{SQLRand}
-	Boyd ja Keromytis esittelevät SQLRand menetelmän SQL-injektiota vastaan artikkelissaan "SQLRand: Preventing SQL Injection Attacks"\space \cite{sqlrand}. SQLRandissa on ideana lisätä jokaiseen SQL-avainsanaan jokin satunnainen numero. Mikäli hyökkääjä yrittäisi suorittaa SQL-injektion tavallisilla SQL-avainsanoilla, se epäonnistuihi, koska sovellus ei tunnistaisi sitä SQL:läksi.
+	Boyd ja Keromytis esittelevät SQLRand menetelmän SQL-injektioiden torjumiseksi artikkelissaan "SQLRand: Preventing SQL Injection Attacks"\space \cite{sqlrand}. SQLRandissa on ideana lisätä jokaiseen SQL-avainsanaan jokin satunnainen numero.Alkuperäinen kysely voi näyttää esimerkiksi seuraavalta:
+		\begin{lstlisting}[language=sql]
+		SELECT * 
+		FROM Oppilaat
+		WHERE opintopisteet > 180
+		\end{lstlisting}
+		Kun SQLRand avaimena käytetään numeroa 123, valmis kysely näyttää seuraavalta: 
+		\begin{lstlisting}[language=sql]
+		SELECT123
+		FROM123 Oppilaat
+		WHERE123 opintopisteet > 180
+		\end{lstlisting}
+		
 	
+	
+	Mikäli hyökkääjä yrittäisi suorittaa SQL-injektion tavallisilla SQL-avainsanoilla, se epäonnistuihi, koska sovellus ei tunnistaisi sitä SQL:läksi.
+	
+
 	Tavallinen tietokanta ei ymmärrä satunnaistettuja SQL-avainsanoja. Artikkelissa tähän ongelmaan oli luotu kaksi eri ratkaisua. Ensimmäinen on muokata tietokannan SQL-tulkkia siten, että se ymmärtää muokattuja SQL-avainsanoja. Tämä voi kuitenkin olla vaikeaa toteuttaa, sekä se saattaa sotkea muiden sovellusten toimintaa, jotka käyttävät samaa tietokantapalvelinta. Toinen ratkaisu on luoda erillinen tulkkisovellus tietokantapalvelimen ja web-sovelluksen välille.
+	
+	Boyd ja Keromytis esittelevät artikkelissaan myös SQLRandin tehokkuutta. Heidän mittaamiensa tulosten mukaan SQLRandin lisääminen tuo keskimäärin 183-316 mikrosekunnin viiveen per kysely.
 	
 	SQLRandia on kritisoitu sen monimutkaisuudesta \cite{prepared}. Kritisoijat pitävät SQLRandin toteuttamista olemassa olevaan sovellukseen aikaavievänä. Sen katsotaan myös hankaloittavan sovelluksen käyttöönottoa.
 	\section{Penetraatiotestaus}
