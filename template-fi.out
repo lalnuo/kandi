@@ -1,0 +1,20 @@
+\BOOKMARK [1][-]{section.1}{Johdanto}{}% 1
+\BOOKMARK [1][-]{section.2}{SQL-Injektio}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Obfuskointi}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{SQL-Injektioiden luokittelu}{section.2}% 4
+\BOOKMARK [1][-]{section.3}{Tietoturvallisen ohjelman toteutus}{}% 5
+\BOOKMARK [2][-]{subsection.3.1}{K\344ytt\344j\344n sy\366tteen k\344sittely}{section.3}% 6
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Validointi}{subsection.3.1}% 7
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Korvaaminen}{subsection.3.1}% 8
+\BOOKMARK [3][-]{subsubsection.3.1.3}{Parametrisoidut kyselyt}{subsection.3.1}% 9
+\BOOKMARK [2][-]{subsection.3.2}{Hienojakoinen p\344\344synhallinta tietokantaan}{section.3}% 10
+\BOOKMARK [1][-]{section.4}{Ajonaikainen SQL-injektoiden est\344minen}{}% 11
+\BOOKMARK [2][-]{subsection.4.1}{AMNESIA}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.2}{SQL-IDS}{section.4}% 13
+\BOOKMARK [2][-]{subsection.4.3}{SQLRand}{section.4}% 14
+\BOOKMARK [1][-]{section.5}{Penetraatiotestaus}{}% 15
+\BOOKMARK [2][-]{subsection.5.1}{Penetraatiotestaus teoriassa}{section.5}% 16
+\BOOKMARK [3][-]{subsubsection.5.1.1}{Hy\366kk\344ysten generointi}{subsection.5.1}% 17
+\BOOKMARK [2][-]{subsection.5.2}{V1p3R}{section.5}% 18
+\BOOKMARK [1][-]{section.6}{Yhteenveto}{}% 19
+\BOOKMARK [1][-]{section*.2}{L\344hteet}{}% 20

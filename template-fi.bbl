@@ -1,0 +1,234 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{APG{\etalchar{+}}12}
+  \providebibliographyfont{name}{}%
+  \providebibliographyfont{lastname}{}%
+  \providebibliographyfont{title}{\emph}%
+  \providebibliographyfont{jtitle}{\btxtitlefont}%
+  \providebibliographyfont{etal}{\emph}%
+  \providebibliographyfont{journal}{}%
+  \providebibliographyfont{volume}{}%
+  \providebibliographyfont{ISBN}{\MakeUppercase}%
+  \providebibliographyfont{ISSN}{\MakeUppercase}%
+  \providebibliographyfont{url}{\url}%
+  \providebibliographyfont{numeral}{}%
+  \expandafter\btxselectlanguage\expandafter {\btxfallbacklanguage}
+
+\expandafter\btxselectlanguage\expandafter {\btxfallbacklanguage}
+\bibitem [{ANBA14}]{generation}
+\btxnamefont {\btxlastnamefont {Appelt}, Dennis}, \btxnamefont
+  {\btxlastnamefont {Nguyen}, Cu\btxfnamespacelong Duy}, \btxnamefont
+  {\btxlastnamefont {Briand}, Lionel\btxfnamespacelong C.}\btxandcomma {}
+  \btxandlong {}\ \btxnamefont {\btxlastnamefont {Alshahwan},
+  Nadia}\btxauthorcolon\ \btxtitlefont {\btxifchangecase {Automated testing for
+  sql injection vulnerabilities: An input mutation approach}{Automated Testing
+  for SQL Injection Vulnerabilities: An Input Mutation Approach}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Proceedings of the 2014 International
+  Symposium on Software Testing and Analysis}, ISSTA 2014, \btxpageslong {}\
+  259--269, New York, NY, USA, 2014. \btxpublisherfont {ACM}\ifbtxprintISBN {,
+  \mbox{\btxISBN~\btxISBNfont {978-1-4503-2645-2}}}.
+\newblock {\latintext \btxurlfont{http://doi.acm.org/10.1145/2610384.2610403}}.
+
+\bibitem [{Anl02}]{definition}
+\btxnamefont {\btxlastnamefont {Anley}, C.}\btxauthorcolon\ \btxtitlefont
+  {\btxifchangecase {Advanced sql injection in sql server
+  applications.}{Advanced SQL Injection In SQL Server Applications.}}
+\newblock \Btxinlong {}\ \btxtitlefont {Next Generation Security Software Ltd.
+  White Paper, 2002.}, 2002.
+
+\bibitem [{APG{\etalchar{+}}12}]{3tier}
+\btxnamefont {\btxlastnamefont {Avireddy}, S.}, \btxnamefont {\btxlastnamefont
+  {Perumal}, V.}, \btxnamefont {\btxlastnamefont {Gowraj}, N.}, \btxnamefont
+  {\btxlastnamefont {Kannan}, R.S.}, \btxnamefont {\btxlastnamefont
+  {Thinakaran}, P.}, \btxnamefont {\btxlastnamefont {Ganapthi}, S.},
+  \btxnamefont {\btxlastnamefont {Gunasekaran}, J.R.}\btxandcomma {}
+  \btxandlong {}\ \btxnamefont {\btxlastnamefont {Prabhu}, S.}\btxauthorcolon\
+  \btxtitlefont {\btxifchangecase {Random4: An application specific randomized
+  encryption algorithm to prevent sql injection}{Random4: An Application
+  Specific Randomized Encryption Algorithm to Prevent SQL Injection}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Trust, Security and Privacy in
+  Computing and Communications (TrustCom), 2012 IEEE 11th International
+  Conference on}, \btxpageslong {}\ 1327--1333,
+  \btxprintmonthyear{.}{June}{2012}{long}.
+
+\bibitem [{AV09}]{vertailu}
+\btxnamefont {\btxlastnamefont {Antunes}, N.} \btxandlong {}\ \btxnamefont
+  {\btxlastnamefont {Vieira}, M.}\btxauthorcolon\ \btxtitlefont
+  {\btxifchangecase {Comparing the effectiveness of penetration testing and
+  static code analysis on the detection of sql injection vulnerabilities in web
+  services}{Comparing the Effectiveness of Penetration Testing and Static Code
+  Analysis on the Detection of SQL Injection Vulnerabilities in Web Services}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Dependable Computing, 2009. PRDC '09.
+  15th IEEE Pacific Rim International Symposium on}, \btxpageslong {}\
+  301--306, \btxprintmonthyear{.}{Nov}{2009}{long}.
+
+\bibitem [{BK04}]{sqlrand}
+\btxnamefont {\btxlastnamefont {Boyd}, Stephen\btxfnamespacelong W.}
+  \btxandlong {}\ \btxnamefont {\btxlastnamefont {Keromytis},
+  Angelos\btxfnamespacelong D.}\btxauthorcolon\ \btxtitlefont {\btxifchangecase
+  {Sqlrand: Preventing sql injection attacks}{SQLrand: Preventing SQL Injection
+  Attacks}}.
+\newblock \Btxinlong {}\ \btxtitlefont {In Proceedings of the 2nd Applied
+  Cryptography and Network Security (ACNS) Conference}, \btxpageslong {}\
+  292--302, 2004.
+
+\bibitem [{CVDP10}]{viper}
+\btxnamefont {\btxlastnamefont {Ciampa}, Angelo}, \btxnamefont
+  {\btxlastnamefont {Visaggio}, Corrado\btxfnamespacelong Aaron}\btxandcomma {}
+  \btxandlong {}\ \btxnamefont {\btxlastnamefont {Di~Penta},
+  Massimiliano}\btxauthorcolon\ \btxtitlefont {\btxifchangecase {A
+  heuristic-based approach for detecting sql-injection vulnerabilities in web
+  applications}{A Heuristic-based Approach for Detecting SQL-injection
+  Vulnerabilities in Web Applications}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Proceedings of the 2010 ICSE Workshop
+  on Software Engineering for Secure Systems}, SESS '10, \btxpageslong {}\
+  43--49, New York, NY, USA, 2010. \btxpublisherfont {ACM}\ifbtxprintISBN {,
+  \mbox{\btxISBN~\btxISBNfont {978-1-60558-965-7}}}.
+\newblock {\latintext \btxurlfont{http://doi.acm.org/10.1145/1809100.1809107}}.
+
+\bibitem [{GGS14}]{valkolaatikko}
+\btxnamefont {\btxlastnamefont {Gupta}, M.K.}, \btxnamefont {\btxlastnamefont
+  {Govil}, M.C.}\btxandcomma {} \btxandlong {}\ \btxnamefont {\btxlastnamefont
+  {Singh}, G.}\btxauthorcolon\ \btxtitlefont {\btxifchangecase {Static analysis
+  approaches to detect sql injection and cross site scripting vulnerabilities
+  in web applications: A survey}{Static analysis approaches to detect SQL
+  injection and cross site scripting vulnerabilities in web applications: A
+  survey}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Recent Advances and Innovations in
+  Engineering (ICRAIE), 2014}, \btxpageslong {}\ 1--5,
+  \btxprintmonthyear{.}{May}{2014}{long}.
+
+\bibitem [{HO06}]{amnesia}
+\btxnamefont {\btxlastnamefont {Halfond}, William\btxfnamespacelong
+  G.\btxfnamespacelong J.} \btxandlong {}\ \btxnamefont {\btxlastnamefont
+  {Orso}, Alessandro}\btxauthorcolon\ \btxtitlefont {\btxifchangecase
+  {Preventing sql injection attacks using amnesia}{Preventing SQL Injection
+  Attacks Using AMNESIA}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Proceedings of the 28th International
+  Conference on Software Engineering}, ICSE '06, \btxpageslong {}\ 795--798,
+  New York, NY, USA, 2006. \btxpublisherfont {ACM}\ifbtxprintISBN {,
+  \mbox{\btxISBN~\btxISBNfont {1-59593-375-1}}}.
+\newblock {\latintext \btxurlfont{http://doi.acm.org/10.1145/1134285.1134416}}.
+
+\bibitem [{HZ09}]{testing}
+\btxnamefont {\btxlastnamefont {Haixia}, Yang} \btxandlong {}\ \btxnamefont
+  {\btxlastnamefont {Zhihong}, Nan}\btxauthorcolon\ \btxtitlefont
+  {\btxifchangecase {A database security testing scheme of web application}{A
+  database security testing scheme of web application}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Computer Science Education, 2009. ICCSE
+  '09. 4th International Conference on}, \btxpageslong {}\ 953--955,
+  \btxprintmonthyear{.}{July}{2009}{long}.
+
+\bibitem [{jav15}]{java}
+\btxpublisherfont {\btxtitlefont {Using Prepared Statements}}.
+\newblock Tarkasteltu: 02.03.2015.
+\newblock {\latintext
+  \btxurlfont{http://docs.oracle.com/javase/tutorial/jdbc/basics/prepared.html}}.
+
+\bibitem [{KT08}]{sqlids}
+\btxnamefont {\btxlastnamefont {Kemalis}, Konstantinos} \btxandlong {}\
+  \btxnamefont {\btxlastnamefont {Tzouramanis}, Theodores}\btxauthorcolon\
+  \btxtitlefont {\btxifchangecase {Sql-ids: A specification-based approach for
+  sql-injection detection}{SQL-IDS: A Specification-based Approach for
+  SQL-injection Detection}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Proceedings of the 2008 ACM Symposium
+  on Applied Computing}, SAC '08, \btxpageslong {}\ 2153--2158, New York, NY,
+  USA, 2008. \btxpublisherfont {ACM}\ifbtxprintISBN {,
+  \mbox{\btxISBN~\btxISBNfont {978-1-59593-753-7}}}.
+\newblock {\latintext \btxurlfont{http://doi.acm.org/10.1145/1363686.1364201}}.
+
+\bibitem [{Pou02}]{guess}
+\btxnamefont {\btxlastnamefont {Poulsen}, Kevin}\btxauthorcolon\
+  \btxpublisherfont {\btxtitlefont {Guesswork Plagues Web Hole Reporting}}.
+\newblock \btxprintmonthyear{.}{March}{2002}{long}.
+\newblock {\latintext \btxurlfont{http://www.securityfocus.com/news/346}}.
+
+\bibitem [{RG07}]{access}
+\btxnamefont {\btxlastnamefont {Roichman}, Alex} \btxandlong {}\ \btxnamefont
+  {\btxlastnamefont {Gudes}, Ehud}\btxauthorcolon\ \btxtitlefont
+  {\btxifchangecase {Fine-grained access control to web databases}{Fine-grained
+  Access Control to Web Databases}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Proceedings of the 12th ACM Symposium
+  on Access Control Models and Technologies}, SACMAT '07, \btxpageslong {}\
+  31--40, New York, NY, USA, 2007. \btxpublisherfont {ACM}\ifbtxprintISBN {,
+  \mbox{\btxISBN~\btxISBNfont {978-1-59593-745-2}}}.
+\newblock {\latintext \btxurlfont{http://doi.acm.org/10.1145/1266840.1266846}}.
+
+\bibitem [{Sal13}]{encoding}
+\btxnamefont {\btxlastnamefont {Saldago}, Roberto}\btxauthorcolon\
+  \btxtitlefont {\btxifchangecase {Sql injection optimization and obfuscation
+  techniques}{SQL Injection Optimization and Obfuscation Techniques}}.
+\newblock 2013.
+
+\bibitem [{Sri14}]{piggy}
+\btxnamefont {\btxlastnamefont {Srivastava}, M.}\btxauthorcolon\ \btxtitlefont
+  {\btxifchangecase {Algorithm to prevent back end database against sql
+  injection attacks}{Algorithm to prevent back end database against SQL
+  injection attacks}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Computing for Sustainable Global
+  Development (INDIACom), 2014 International Conference on}, \btxpageslong {}\
+  754--757, \btxprintmonthyear{.}{March}{2014}{long}.
+
+\bibitem [{ST13}]{preventions}
+\btxnamefont {\btxlastnamefont {Shar}, L.K.} \btxandlong {}\ \btxnamefont
+  {\btxlastnamefont {Tan}, Hee\btxfnamespacelong Beng\btxfnamespacelong
+  Kuan}\btxauthorcolon\ \btxtitlefont {Defeating SQL Injection},
+  \btxpublisherfont {\btxvolumelong {}~\btxvolumefont {46}}.
+\newblock \btxprintmonthyear{.}{March}{2013}{long}.
+
+\bibitem [{Suo15}]{Suosituin}
+\btxtitlefont {\btxifchangecase {Db-engines ranking}{DB-Engines Ranking}}.
+\newblock Tarkasteltu: 29.4.2015.
+\newblock {\latintext \btxurlfont{http://db-engines.com/en/ranking}}.
+
+\bibitem [{SZAM14}]{prepared}
+\btxnamefont {\btxlastnamefont {Sadeghian}, A.}, \btxnamefont {\btxlastnamefont
+  {Zamani}, M.}\btxandcomma {} \btxandlong {}\ \btxnamefont {\btxlastnamefont
+  {Abd~Manaf}, A.}\btxauthorcolon\ \btxtitlefont {\btxifchangecase {Sql
+  injection vulnerability general patch using header sanitization}{SQL
+  injection vulnerability general patch using header sanitization}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Computer, Communications, and Control
+  Technology (I4CT), 2014 International Conference on}, \btxpageslong {}\
+  239--242, \btxprintmonthyear{.}{Sept}{2014}{long}.
+
+\bibitem [{SZI13}]{still-alive}
+\btxnamefont {\btxlastnamefont {Sadeghian}, A.}, \btxnamefont {\btxlastnamefont
+  {Zamani}, M.}\btxandcomma {} \btxandlong {}\ \btxnamefont {\btxlastnamefont
+  {Ibrahim}, S.}\btxauthorcolon\ \btxpublisherfont {\btxtitlefont {SQL
+  Injection Is Still Alive: A Study on SQL Injection Signature Evasion
+  Techniques}}.
+\newblock \btxprintmonthyear{.}{Sept}{2013}{long}.
+
+\bibitem [{TGZ14}]{testing2}
+\btxnamefont {\btxlastnamefont {Thom{\'e}}, Julian}, \btxnamefont
+  {\btxlastnamefont {Gorla}, Alessandra}\btxandcomma {} \btxandlong {}\
+  \btxnamefont {\btxlastnamefont {Zeller}, Andreas}\btxauthorcolon\
+  \btxtitlefont {\btxifchangecase {Search-based security testing of web
+  applications}{Search-based Security Testing of Web Applications}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Proceedings of the 7th International
+  Workshop on Search-Based Software Testing}, SBST 2014, \btxpageslong {}\
+  5--14, New York, NY, USA, 2014. \btxpublisherfont {ACM}\ifbtxprintISBN {,
+  \mbox{\btxISBN~\btxISBNfont {978-1-4503-2852-4}}}.
+\newblock {\latintext \btxurlfont{http://doi.acm.org/10.1145/2593833.2593835}}.
+
+\bibitem [{TMH10}]{regexp}
+\btxnamefont {\btxlastnamefont {Tajpour}, A.}, \btxnamefont {\btxlastnamefont
+  {Massrum}, M.}\btxandcomma {} \btxandlong {}\ \btxnamefont {\btxlastnamefont
+  {Heydari}, M.Z.}\btxauthorcolon\ \btxtitlefont {\btxifchangecase {Comparison
+  of sql injection detection and prevention techniques}{Comparison of SQL
+  injection detection and prevention techniques}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Education Technology and Computer
+  (ICETC), 2010 2nd International Conference on}, \btxvolumelong
+  {}~\btxvolumefont {5}, \btxpageslong {}\ V5--174--V5--179,
+  \btxprintmonthyear{.}{June}{2010}{long}.
+
+\bibitem [{VAM09}]{detection}
+\btxnamefont {\btxlastnamefont {Vieira}, M.}, \btxnamefont {\btxlastnamefont
+  {Antunes}, N.}\btxandcomma {} \btxandlong {}\ \btxnamefont {\btxlastnamefont
+  {Madeira}, H.}\btxauthorcolon\ \btxtitlefont {\btxifchangecase {Using web
+  security scanners to detect vulnerabilities in web services}{Using web
+  security scanners to detect vulnerabilities in web services}}.
+\newblock \Btxinlong {}\ \btxtitlefont {Dependable Systems Networks, 2009. DSN
+  '09. IEEE/IFIP International Conference on}, \btxpageslong {}\ 566--571,
+  \btxprintmonthyear{.}{June}{2009}{long}.
+
+\end{thebibliography}

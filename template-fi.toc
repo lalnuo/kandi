@@ -1,0 +1,25 @@
+\select@language {finnish}
+\contentsline {section}{\numberline {1}Johdanto}{1}{section.1}
+\contentsline {section}{\numberline {2}SQL-Injektio}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Obfuskointi}{4}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}SQL-Injektioiden luokittelu}{4}{subsection.2.2}
+\contentsline {section}{\numberline {3}Tietoturvallisen ohjelman toteutus}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}K\IeC {\"a}ytt\IeC {\"a}j\IeC {\"a}n sy\IeC {\"o}tteen k\IeC {\"a}sittely}{6}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Validointi}{6}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.2}Korvaaminen}{6}{subsubsection.3.1.2}
+\contentsline {subsubsection}{\numberline {3.1.3}Parametrisoidut kyselyt}{7}{subsubsection.3.1.3}
+\contentsline {subsection}{\numberline {3.2}Hienojakoinen p\IeC {\"a}\IeC {\"a}synhallinta tietokantaan}{8}{subsection.3.2}
+\contentsline {section}{\numberline {4}Ajonaikainen SQL-injektoiden est\IeC {\"a}minen}{10}{section.4}
+\contentsline {subsection}{\numberline {4.1}AMNESIA}{10}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}SQL-IDS}{12}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}SQLRand}{14}{subsection.4.3}
+\contentsline {section}{\numberline {5}Penetraatiotestaus}{15}{section.5}
+\contentsline {subsection}{\numberline {5.1}Penetraatiotestaus teoriassa}{15}{subsection.5.1}
+\contentsline {subsubsection}{\numberline {5.1.1}Hy\IeC {\"o}kk\IeC {\"a}ysten generointi}{16}{subsubsection.5.1.1}
+\contentsline {subsection}{\numberline {5.2}V1p3R}{17}{subsection.5.2}
+\contentsline {section}{\numberline {6}Yhteenveto}{18}{section.6}
+\contentsline {section}{L\IeC {\"a}hteet}{19}{section*.2}
+\select@language {finnish}
+\select@language {finnish}
+\select@language {finnish}
+\select@language {finnish}
